@@ -18,25 +18,25 @@ export type TPostType = "Post" | "Paper" | "Page"
 export type TPost = {
   id: string
   date: { start_date: string }
-  type: TPostType[]
+  type: TPostType | TPostType[]
   slug: string
   tags?: string[]
   category?: string[]
-  summary?: string
+  summary?: string | null
   author?: {
     id: string
     name: string
-    profile_photo?: string
+    profile_photo?: string | null
   }[]
   title: string
-  status: TPostStatus[]
+  status: TPostStatus | TPostStatus[]
   createdTime: string
   fullWidth: boolean
-  thumbnail?: string
+  thumbnail?: string | null
 }
 
 export type PostDetail = TPost & {
-  recordMap: ExtendedRecordMap
+  content: string
 }
 
 export type TPosts = TPost[]
