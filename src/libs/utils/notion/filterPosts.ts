@@ -1,4 +1,5 @@
 import { TPosts, TPostStatus, TPostType } from "src/types"
+import { getFirstPropertyValue } from "./getFirstPropertyValue"
 
 export type FilterPostsOptions = {
   acceptStatus?: TPostStatus[]
@@ -13,10 +14,6 @@ const current = new Date()
 const tomorrow = new Date(current)
 tomorrow.setDate(tomorrow.getDate() + 1)
 tomorrow.setHours(0, 0, 0, 0)
-
-function getFirstPropertyValue<T extends string>(value?: T | T[]) {
-  return Array.isArray(value) ? value[0] : value
-}
 
 export function filterPosts(
   posts: TPosts,

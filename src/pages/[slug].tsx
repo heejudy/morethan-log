@@ -11,6 +11,7 @@ import { queryKey } from "src/constants/queryKey"
 import { dehydrate } from "@tanstack/react-query"
 import usePostQuery from "src/hooks/usePostQuery"
 import { FilterPostsOptions } from "src/libs/utils/notion/filterPosts"
+import { getFirstPropertyValue } from "src/libs/utils/notion/getFirstPropertyValue"
 
 const filter: FilterPostsOptions = {
   acceptStatus: ["Public", "PublicOnDetail"],
@@ -68,7 +69,7 @@ const DetailPage: NextPageWithLayout = () => {
     date: new Date(date).toISOString(),
     image: image,
     description: post.summary || "",
-    type: post.type[0],
+    type: getFirstPropertyValue(post.type),
     url: `${CONFIG.link}/${post.slug}`,
   }
 

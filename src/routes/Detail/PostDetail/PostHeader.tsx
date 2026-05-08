@@ -5,16 +5,19 @@ import { formatDate } from "src/libs/utils"
 import Image from "next/image"
 import React from "react"
 import styled from "@emotion/styled"
+import { getFirstPropertyValue } from "src/libs/utils/notion/getFirstPropertyValue"
 
 type Props = {
   data: TPost
 }
 
 const PostHeader: React.FC<Props> = ({ data }) => {
+  const type = getFirstPropertyValue(data.type)
+
   return (
     <StyledWrapper>
       <h1 className="title">{data.title}</h1>
-      {data.type[0] !== "Paper" && (
+      {type !== "Paper" && (
         <nav>
           <div className="top">
             {data.author && data.author[0] && data.author[0].name && (
