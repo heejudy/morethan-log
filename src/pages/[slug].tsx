@@ -29,7 +29,9 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const slug = context.params?.slug
+  const slug = Array.isArray(context.params?.slug)
+    ? context.params?.slug[0]
+    : context.params?.slug
 
   const posts = await getPosts()
   const feedPosts = filterPosts(posts)
@@ -37,7 +39,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   const detailPosts = filterPosts(posts, filter)
   const postDetail = detailPosts.find((t: any) => t.slug === slug)
-  const recordMap = await getRecordMap(postDetail?.id!)
+
+  // 🔥 핵심: 없으면 404 처리
+  if (!postDetail) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const recordMap = await getRecordMap(postDetail.id)
 
   await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
     ...postDetail,
