@@ -29,11 +29,49 @@ export const getPosts = async () => {
   id = idToUuid(id)
   const collectionValue = Object.values(response.collection)[0]?.value as any
   const collection = collectionValue?.value ?? collectionValue
-  const block = response.block
+  let block = response.block
   const schema = collection?.schema
 
   const blockValue = (block[id].value as any)?.value ?? block[id].value
   const rawMetadata = blockValue
+
+  if (!Object.keys(response.collection_query || {}).length) {
+    const collectionId =
+      rawMetadata?.collection_id || rawMetadata?.format?.collection_pointer?.id
+    const viewId = rawMetadata?.view_ids?.[0]
+    const collectionViewValue = (response.collection_view?.[viewId]?.value as any)
+      ?.value
+      ? (response.collection_view?.[viewId]?.value as any).value
+      : response.collection_view?.[viewId]?.value
+
+    if (collectionId && viewId && collectionViewValue) {
+      const collectionData = await api.getCollectionData(
+        collectionId,
+        viewId,
+        collectionViewValue
+      )
+
+      response.block = {
+        ...response.block,
+        ...collectionData.recordMap.block,
+      }
+      response.collection = {
+        ...response.collection,
+        ...collectionData.recordMap.collection,
+      }
+      response.collection_view = {
+        ...response.collection_view,
+        ...collectionData.recordMap.collection_view,
+      }
+      response.collection_query = {
+        ...response.collection_query,
+        [collectionId]: {
+          [viewId]: (collectionData.result as any)?.reducerResults,
+        },
+      }
+      block = response.block
+    }
+  }
 
   // Check Type
   if (

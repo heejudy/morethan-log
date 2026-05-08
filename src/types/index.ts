@@ -24,8 +24,8 @@ export type TPost = {
   category?: string[]
   summary?: string | null
   author?: {
-    id: string
-    name: string
+    id: string | null
+    name: string | null
     profile_photo?: string | null
   }[]
   title: string
