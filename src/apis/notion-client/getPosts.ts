@@ -13,9 +13,19 @@ import { TPosts } from "src/types"
 // TODO: react query를 사용해서 처음 불러온 뒤로는 해당데이터만 사용하도록 수정
 export const getPosts = async () => {
   let id = CONFIG.notionConfig.pageId as string
+  if (!id) {
+    throw new Error(
+      "Missing NOTION_PAGE_ID. Add it to .env.local for local builds and to Vercel Environment Variables for deployment."
+    )
+  }
+
   const api = new NotionAPI()
 
-  const response = await api.getPage(id)
+  const response = await api.getPage(id).catch((error) => {
+    throw new Error(
+      `Could not load Notion page "${id}". Check that NOTION_PAGE_ID is copied from the public Notion web link and that the Notion page is published to the web. Original error: ${error.message}`
+    )
+  })
   id = idToUuid(id)
   const collectionValue = Object.values(response.collection)[0]?.value as any
   const collection = collectionValue?.value ?? collectionValue
@@ -31,6 +41,10 @@ export const getPosts = async () => {
     rawMetadata?.type !== "collection_view"
   ) {
     return []
+  } else if (!response.collection_query) {
+    throw new Error(
+      `Notion page "${CONFIG.notionConfig.pageId}" is accessible, but it does not expose a database collection. Use the shared web link of the duplicated morethan-log Notion database page, not a normal Notion document page.`
+    )
   } else {
     // Construct Data
     const pageIds = getAllPageIds(response)
