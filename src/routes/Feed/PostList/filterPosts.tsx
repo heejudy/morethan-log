@@ -12,24 +12,40 @@ interface FilterPostsParams {
 export function filterPosts({
   posts,
   q,
-  tag = undefined,
+  tag,
   category = DEFAULT_CATEGORY,
   order = "desc",
 }: FilterPostsParams): TPost[] {
-  return posts
+  return (posts || [])
     .filter((post) => {
+      // 안전한 기본값 처리
+      const title = post.title || ""
+      const summary = post.summary || ""
       const tagContent = post.tags ? post.tags.join(" ") : ""
-      const searchContent = post.title + post.summary + tagContent
+
+      const searchContent = (title + summary + tagContent).toLowerCase()
+
       return (
-        searchContent.toLowerCase().includes(q.toLowerCase()) &&
-        (!tag || (post.tags && post.tags.includes(tag))) &&
-        (category === DEFAULT_CATEGORY ||
-          (post.category && post.category.includes(category)))
+        searchContent.includes((q || "").toLowerCase()) &&
+        (!tag || post.tags?.includes(tag)) &&
+        (
+          category === DEFAULT_CATEGORY ||
+          post.category?.includes(category)
+        )
       )
     })
     .sort((a, b) => {
-      const dateA = new Date(a.date.start_date).getTime()
-      const dateB = new Date(b.date.start_date).getTime()
-      return order === "desc" ? dateB - dateA : dateA - dateB
+      // date 안전 처리 (없으면 0으로)
+      const dateA = a.date?.start_date
+        ? new Date(a.date.start_date).getTime()
+        : 0
+
+      const dateB = b.date?.start_date
+        ? new Date(b.date.start_date).getTime()
+        : 0
+
+      return order === "desc"
+        ? dateB - dateA
+        : dateA - dateB
     })
 }
