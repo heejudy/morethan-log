@@ -1,6 +1,16 @@
 import { idToUuid } from "notion-utils"
 import { ExtendedRecordMap, ID } from "notion-types"
 
+function collectBlockIds(value: any, pageSet: Set<ID>) {
+  if (!value || typeof value !== "object") return
+
+  if (Array.isArray(value.blockIds)) {
+    value.blockIds.forEach((id: ID) => pageSet.add(id))
+  }
+
+  Object.values(value).forEach((child) => collectBlockIds(child, pageSet))
+}
+
 export default function getAllPageIds(
   response: ExtendedRecordMap,
   viewId?: string
@@ -14,15 +24,12 @@ export default function getAllPageIds(
   let pageIds: ID[] = []
   if (viewId) {
     const vId = idToUuid(viewId)
-    pageIds = views[vId]?.blockIds
+    const pageSet = new Set<ID>()
+    collectBlockIds(views[vId], pageSet)
+    pageIds = [...pageSet]
   } else {
     const pageSet = new Set<ID>()
-    // * type not exist
-    Object.values(views).forEach((view: any) => {
-      view?.collection_group_results?.blockIds?.forEach((id: ID) =>
-        pageSet.add(id)
-      )
-    })
+    collectBlockIds(views, pageSet)
     pageIds = [...pageSet]
   }
   return pageIds
