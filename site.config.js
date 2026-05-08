@@ -4,7 +4,7 @@ const CONFIG = {
     name: "Heeju Mo",
     image: "/avatar.jpeg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
     role: "developer",
-    bio: "Hello!!!",
+    bio: "공부 정리",
     email: "moheeju1223@gmail.com",
     linkedin: "",
     github: "heejudy",
@@ -12,14 +12,14 @@ const CONFIG = {
   },
   projects: [
     {
-      name: `morethan-log`,
-      href: "https://github.com/morethanmin/morethan-log",
+      name: `heejudy-log`,
+      href: "https://github.com/heejudy/morethan-log",
     },
   ],
   // blog setting (required)
   blog: {
     title: "heeju-log",
-    description: "welcome to morethan-log!",
+    description: "공부 정리",
     scheme: "system", // 'light' | 'dark' | 'system'
   },
 
@@ -27,7 +27,7 @@ const CONFIG = {
   link: "https://heejudy-blog.vercel.app",
   since: 2026, // If leave this empty, current year will be used.
   lang: "ko-KR", // ['en-US', 'zh-CN', 'zh-HK', 'zh-TW', 'ja-JP', 'es-ES', 'ko-KR']
-  ogImageGenerateURL: "https://og-image-korean.vercel.app", // The link to generate OG image, don't end with a slash
+  ogImageGenerateURL: "https://heejudy-blog.vercel.app/og-image.png", // The link to generate OG image, don't end with a slash
 
   // notion configuration (required)
   notionConfig: {
