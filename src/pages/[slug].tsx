@@ -68,9 +68,9 @@ const DetailPage: NextPageWithLayout = () => {
   if (!post) return <CustomError />
 
   const image =
-    post.thumbnail ??
-    CONFIG.ogImageGenerateURL ??
-    `${CONFIG.ogImageGenerateURL}/${encodeURIComponent(post.title)}.png`
+  post.thumbnail ??
+  CONFIG.ogImageGenerateURL ??
+  `${CONFIG.ogImageGenerateURL}/${encodeURIComponent(post.title || "")}.png`
 
   const date = post.date?.start_date || post.createdTime || ""
   const type = getFirstPropertyValue(post.type) || "Post"
