@@ -14,6 +14,10 @@ const tomorrow = new Date(current)
 tomorrow.setDate(tomorrow.getDate() + 1)
 tomorrow.setHours(0, 0, 0, 0)
 
+function getFirstPropertyValue<T extends string>(value?: T | T[]) {
+  return Array.isArray(value) ? value[0] : value
+}
+
 export function filterPosts(
   posts: TPosts,
   options: FilterPostsOptions = initialOption
@@ -28,13 +32,13 @@ export function filterPosts(
     })
     // filter status
     .filter((post) => {
-      const postStatus = post.status?.[0]
-      return acceptStatus.includes(postStatus)
+      const postStatus = getFirstPropertyValue(post.status)
+      return !!postStatus && acceptStatus.includes(postStatus)
     })
     // filter type
     .filter((post) => {
-      const postType = post.type?.[0]
-      return acceptType.includes(postType)
+      const postType = getFirstPropertyValue(post.type)
+      return !!postType && acceptType.includes(postType)
     })
   return filteredPosts
 }
