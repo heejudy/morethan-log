@@ -5,24 +5,30 @@ import styled from "@emotion/styled"
 import { Emoji } from "../../components/Emoji"
 
 const ServiceCard: React.FC = () => {
-  if (!CONFIG.projects) return null
+  if (!CONFIG.projects || CONFIG.projects.length === 0) return null
+
   return (
     <>
       <StyledTitle>
         <Emoji>🌟</Emoji> Service
       </StyledTitle>
+
       <StyledWrapper>
-        {CONFIG.projects.map((project, idx) => (
-          <a
-            key={idx}
-            href={`${project.href}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <AiFillCodeSandboxCircle className="icon" />
-            <div className="name">{project.name}</div>
-          </a>
-        ))}
+        {CONFIG.projects.map((project, idx) => {
+          if (!project?.href || !project?.name) return null
+
+          return (
+            <a
+              key={idx}
+              href={project.href}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <AiFillCodeSandboxCircle className="icon" />
+              <div className="name">{project.name}</div>
+            </a>
+          )
+        })}
       </StyledWrapper>
     </>
   )
@@ -43,6 +49,7 @@ const StyledWrapper = styled.div`
   border-radius: 1rem;
   background-color: ${({ theme }) =>
     theme.scheme === "light" ? "white" : theme.colors.gray4};
+
   > a {
     display: flex;
     padding: 0.75rem;
@@ -56,13 +63,13 @@ const StyledWrapper = styled.div`
       color: ${({ theme }) => theme.colors.gray12};
       background-color: ${({ theme }) => theme.colors.gray5};
     }
+
     .icon {
       font-size: 1.5rem;
-      line-height: 2rem;
     }
+
     .name {
       font-size: 0.875rem;
-      line-height: 1.25rem;
     }
   }
 `
