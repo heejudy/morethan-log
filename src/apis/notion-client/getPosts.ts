@@ -150,14 +150,21 @@ const mapPageToPost = (page: PageObjectResponse): TPost => {
 }
 
 export const getPosts = async (): Promise<TPosts> => {
-  const pages = await getDatabasePages()
-  const data = pages.map(mapPageToPost)
+  try {
+    const pages = await getDatabasePages()
+    console.log("✅ pages:", pages)
 
-  data.sort((a, b) => {
-    const dateA = new Date(a?.date?.start_date || a.createdTime)
-    const dateB = new Date(b?.date?.start_date || b.createdTime)
-    return dateB.getTime() - dateA.getTime()
-  })
+    const data = pages.map(mapPageToPost)
 
-  return data
+    data.sort((a, b) => {
+      const dateA = new Date(a?.date?.start_date || a.createdTime)
+      const dateB = new Date(b?.date?.start_date || b.createdTime)
+      return dateB.getTime() - dateA.getTime()
+    })
+
+    return data
+  } catch (e) {
+    console.error("❌ getPosts error:", e)
+    return []
+  }
 }
