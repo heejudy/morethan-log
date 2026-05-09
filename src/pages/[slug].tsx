@@ -34,37 +34,31 @@ export const getStaticProps: GetStaticProps = async (context) => {
     ? context.params?.slug[0]
     : context.params?.slug
 
+  console.log("🔥 slug:", slug)
+
   const posts = await getPosts()
-
-  console.log("🔥 posts:", posts) // 👈 여기 추가
-
-  const feedPosts = filterPosts(posts)
-  await queryClient.prefetchQuery(queryKey.posts(), () => feedPosts)
+  console.log("🔥 posts:", posts)
 
   const detailPosts = filterPosts(posts, filter)
+  console.log("🔥 detailPosts:", detailPosts)
 
   const postDetail = detailPosts.find(
-  (t: any) => t.slug?.toLowerCase() === String(slug).toLowerCase()
+    (t: any) => t.slug?.toLowerCase() === String(slug).toLowerCase()
   )
 
+  console.log("🔥 postDetail:", postDetail)
+
   if (!postDetail) {
-    return {
-      notFound: true,
-    }
+    console.log("❌ NOT FOUND:", slug)
+    return { notFound: true }
   }
 
   const content = await getPageContent(postDetail.id)
-
-  await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
-    ...postDetail,
-    content,
-  }))
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: CONFIG.revalidateTime,
   }
 }
 
