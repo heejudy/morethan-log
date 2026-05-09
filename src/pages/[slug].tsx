@@ -69,10 +69,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 const DetailPage: NextPageWithLayout = () => {
   const post = usePostQuery()
+if (!post) return <CustomError /> // 🔥 먼저 막아
 
-  if (!post) return <CustomError />
-
-  const image =
+const image =
   post.thumbnail ??
   CONFIG.ogImageGenerateURL ??
   `${CONFIG.ogImageGenerateURL}/${encodeURIComponent(post.title || "")}.png`

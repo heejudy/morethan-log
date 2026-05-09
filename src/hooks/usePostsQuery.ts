@@ -5,8 +5,7 @@ import { TPost } from "src/types"
 const usePostsQuery = () => {
   const { data } = useQuery({
     queryKey: queryKey.posts(),
-    initialData: [] as TPost[],
-    enabled: false,
+    initialData: [] as TPost[]
   })
 
   if (!data) throw new Error("Posts data is not found")

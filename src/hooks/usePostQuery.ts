@@ -11,7 +11,7 @@ const usePostQuery = () => {
 
   const { data } = useQuery<PostDetail>({
     queryKey: queryKey.post(slug as string),
-    enabled: isReady, // 🔥 핵심
+    enabled: isReady,
   })
 
   return data
