@@ -37,7 +37,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
   console.log("🔥 slug:", slug)
 
   const posts = await getPosts()
-  console.log("🔥 posts:", posts)
+
+  console.log("🔥 ALL POSTS:", posts.map(p => ({
+    title: p.title,
+    slug: p.slug,
+    status: p.status,
+    type: p.type,
+  })))
 
   const detailPosts = filterPosts(posts, filter)
   console.log("🔥 detailPosts:", detailPosts)
