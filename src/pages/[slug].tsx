@@ -56,6 +56,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     recordMap,
   }))
 
+  console.log("postDetail:", postDetail)
+  console.log("recordMap:", recordMap)
+
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
