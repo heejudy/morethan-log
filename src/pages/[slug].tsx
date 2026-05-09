@@ -41,7 +41,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const detailPosts = filterPosts(posts, filter)
 
   const postDetail = detailPosts.find(
-    (t: any) => t.slug?.toLowerCase() === String(slug).toLowerCase()
+  (t: any) => t.slug?.toLowerCase() === String(slug).toLowerCase()
   )
 
   if (!postDetail) {
