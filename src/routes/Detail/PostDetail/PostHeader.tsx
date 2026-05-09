@@ -1,23 +1,20 @@
-import { CONFIG } from "site.config"
-import Tag from "src/components/Tag"
-import { TPost } from "src/types"
-import { formatDate } from "src/libs/utils"
+import { CONFIG } from "../../../../site.config"
+import Tag from "../../../components/Tag"
+import { TPost } from "../../../types"
+import { formatDate } from "../../../libs/utils"
 import Image from "next/image"
 import React from "react"
 import styled from "@emotion/styled"
-import { getFirstPropertyValue } from "src/libs/utils/notion/getFirstPropertyValue"
 
 type Props = {
   data: TPost
 }
 
 const PostHeader: React.FC<Props> = ({ data }) => {
-  const type = getFirstPropertyValue(data.type)
-
   return (
     <StyledWrapper>
       <h1 className="title">{data.title}</h1>
-      {type !== "Paper" && (
+      {data.type[0] !== "Paper" && (
         <nav>
           <div className="top">
             {data.author && data.author[0] && data.author[0].name && (

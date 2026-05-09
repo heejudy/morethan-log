@@ -2,7 +2,7 @@ import { useRouter } from "next/router"
 import React from "react"
 import { COLOR_SET } from "./constants"
 import styled from "@emotion/styled"
-import { colors } from "src/styles"
+import { colors } from "../../styles"
 
 export const getColorClassByName = (name: string): string => {
   try {
@@ -49,7 +49,7 @@ const StyledWrapper = styled.div`
   padding-bottom: 0.25rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  border-radius: 9999px;
+  border-radius: 8px;
   width: fit-content;
   font-size: 0.875rem;
   line-height: 1.25rem;

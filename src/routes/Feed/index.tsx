@@ -22,12 +22,17 @@ const Feed: React.FC<Props> = () => {
   return (
     <StyledWrapper>
       <div
-        className="lt"
+        className="rt"
         css={{
           height: `calc(100vh - ${HEADER_HEIGHT}px)`,
         }}
       >
-        <TagList />
+        <ProfileCard />
+        <ContactCard />
+        <div className="footer">
+          <Footer />
+        </div>
+        {/* <ServiceCard /> */}
       </div>
       <div className="mid">
         <MobileProfileCard />
@@ -38,19 +43,14 @@ const Feed: React.FC<Props> = () => {
         </div>
         <FeedHeader />
         <PostList q={q} />
-        <div className="footer">
-          <Footer />
-        </div>
-      </div>
-      <div
-        className="rt"
-        css={{
-          height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-        }}
-      >
-        <ProfileCard />
-        <ServiceCard />
-        <ContactCard />
+        {/* <div
+          className="lt"
+          css={{
+            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+          }}
+        >
+          <TagList />
+        </div> */}
         <div className="footer">
           <Footer />
         </div>
@@ -71,6 +71,12 @@ const StyledWrapper = styled.div`
   @media (max-width: 768px) {
     display: block;
     padding: 0.5rem 0;
+  }
+
+  > .profile {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   > .lt {
@@ -95,7 +101,7 @@ const StyledWrapper = styled.div`
     grid-column: span 12 / span 12;
 
     @media (min-width: 1024px) {
-      grid-column: span 7 / span 7;
+      grid-column: span 9 / span 9;
     }
 
     > .tags {

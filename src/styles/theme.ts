@@ -2,7 +2,7 @@ import { Theme } from "@emotion/react"
 import { Colors, colors } from "./colors"
 import { variables } from "./variables"
 import { zIndexes } from "./zIndexes"
-import { SchemeType } from "src/types"
+import { SchemeType } from "../types"
 
 declare module "@emotion/react" {
   export interface Theme {

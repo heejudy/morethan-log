@@ -1,10 +1,4 @@
-declare global {
-  interface Window {
-    gtag: (...args: any[]) => void
-  }
-}
-
-import { CONFIG } from "site.config"
+import { CONFIG } from "../../site.config"
 export const GA_TRACKING_ID = CONFIG.googleAnalytics.config.measurementId
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages

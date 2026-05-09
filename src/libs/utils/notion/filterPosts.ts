@@ -1,5 +1,4 @@
-import { TPosts, TPostStatus, TPostType } from "src/types"
-import { getFirstPropertyValue } from "./getFirstPropertyValue"
+import { TPosts, TPostStatus, TPostType } from "../../../types"
 
 export type FilterPostsOptions = {
   acceptStatus?: TPostStatus[]
@@ -29,13 +28,13 @@ export function filterPosts(
     })
     // filter status
     .filter((post) => {
-      const postStatus = getFirstPropertyValue(post.status)
-      return !!postStatus && acceptStatus.includes(postStatus)
+      const postStatus = post.status[0]
+      return acceptStatus.includes(postStatus)
     })
     // filter type
     .filter((post) => {
-      const postType = getFirstPropertyValue(post.type)
-      return !!postType && acceptType.includes(postType)
+      const postType = post.type[0]
+      return acceptType.includes(postType)
     })
   return filteredPosts
 }

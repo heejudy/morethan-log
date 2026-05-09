@@ -2,11 +2,10 @@ import React from "react"
 import PostHeader from "./PostHeader"
 import Footer from "./PostFooter"
 import CommentBox from "./CommentBox"
-import Category from "src/components/Category"
+import Category from "../../../components/Category"
 import styled from "@emotion/styled"
 import NotionRenderer from "../components/NotionRenderer"
-import usePostQuery from "src/hooks/usePostQuery"
-import { getFirstPropertyValue } from "src/libs/utils/notion/getFirstPropertyValue"
+import usePostQuery from "../../../hooks/usePostQuery"
 
 type Props = {}
 
@@ -16,24 +15,22 @@ const PostDetail: React.FC<Props> = () => {
   if (!data) return null
 
   const category = (data.category && data.category?.[0]) || undefined
-  const status = getFirstPropertyValue(data.status)
-  const type = getFirstPropertyValue(data.type)
 
   return (
     <StyledWrapper>
       <article>
         {category && (
           <div css={{ marginBottom: "0.5rem" }}>
-            <Category readOnly={status === "PublicOnDetail"}>
+            <Category readOnly={data.status?.[0] === "PublicOnDetail"}>
               {category}
             </Category>
           </div>
         )}
-        {type === "Post" && <PostHeader data={data} />}
+        {data.type[0] === "Post" && <PostHeader data={data} />}
         <div>
-          <NotionRenderer recordMap={data.recordMap} />
+          <NotionRenderer content={data.content} />
         </div>
-        {type === "Post" && (
+        {data.type[0] === "Post" && (
           <>
             <Footer />
             <CommentBox data={data} />

@@ -1,6 +1,6 @@
 import Link from "next/link"
-import { CONFIG } from "site.config"
 import styled from "@emotion/styled"
+import { CONFIG } from "../../../../site.config"
 
 const Logo = () => {
   return (

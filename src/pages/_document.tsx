@@ -1,5 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from "next/document"
-import { CONFIG } from "site.config"
+import { CONFIG } from "../../site.config"
 
 class MyDocument extends Document {
   render() {
@@ -36,6 +36,15 @@ class MyDocument extends Document {
               />
             </>
           )}
+          <meta property="og:title" content="heeju-log" />
+          <meta property="og:description" content="heeju" />
+          <meta
+            property="og:image"
+            content="https://heeju-blog.vercel.app/og-image.png"
+          />
+          <meta property="og:url" content="https://heeju-blog.vercel.app" />
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="heeju" />
         </Head>
         <body>
           <Main />

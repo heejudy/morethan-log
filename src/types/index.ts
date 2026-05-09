@@ -1,6 +1,5 @@
 import { NextPage } from "next"
 import { AppProps } from "next/app"
-import { ExtendedRecordMap } from "notion-types"
 import { ReactElement, ReactNode } from "react"
 
 // TODO: refactor types
@@ -18,25 +17,25 @@ export type TPostType = "Post" | "Paper" | "Page"
 export type TPost = {
   id: string
   date: { start_date: string }
-  type: TPostType | TPostType[]
+  type: TPostType[]
   slug: string
   tags?: string[]
   category?: string[]
   summary?: string | null
   author?: {
-    id: string | null
-    name: string | null
+    id: string
+    name: string
     profile_photo?: string | null
   }[]
   title: string
-  status: TPostStatus | TPostStatus[]
+  status: TPostStatus[]
   createdTime: string
   fullWidth: boolean
   thumbnail?: string | null
 }
 
 export type PostDetail = TPost & {
-  recordMap: ExtendedRecordMap
+  content: string
 }
 
 export type TPosts = TPost[]

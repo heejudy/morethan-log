@@ -2,7 +2,7 @@ import NavBar from "./NavBar"
 import Logo from "./Logo"
 import ThemeToggle from "./ThemeToggle"
 import styled from "@emotion/styled"
-import { zIndexes } from "src/styles/zIndexes"
+import { zIndexes } from "../../../styles/zIndexes"
 
 type Props = {
   fullWidth: boolean
