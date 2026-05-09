@@ -1,8 +1,10 @@
 if (!process.env.GITHUB_ACTIONS) {
+  require("dotenv").config({ path: ".env.local" })
   require("dotenv").config()
 }
 const fs = require("fs")
 const CACHE_PATH = ".notionsync/published.json"
+const notionToken = process.env.NOTION_TOKEN || process.env.NOTION_API_KEY
 
 function readCache() {
   if (!fs.existsSync(CACHE_PATH)) {
@@ -38,7 +40,7 @@ async function run() {
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+        Authorization: `Bearer ${notionToken}`,
         "Notion-Version": "2022-06-28",
         "Content-Type": "application/json",
       },
