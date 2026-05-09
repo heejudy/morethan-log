@@ -60,6 +60,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 
   const content = await getPageContent(postDetail.id)
+  await queryClient.prefetchQuery(queryKey.post(String(slug)), () => ({
+    ...postDetail,
+    content,
+  }))
 
   return {
     props: {
