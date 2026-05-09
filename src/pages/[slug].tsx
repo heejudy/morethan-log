@@ -26,7 +26,7 @@ export const getStaticPaths = async () => {
     paths: filteredPost.map((row) => ({
       params: { slug: row.slug },
     })),
-    fallback: true,
+    fallback: "blocking",
   }
 }
 

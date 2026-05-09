@@ -6,9 +6,12 @@ import { PostDetail } from "src/types"
 const usePostQuery = () => {
   const router = useRouter()
   const { slug } = router.query
+
+  const isReady = router.isReady && typeof slug === "string"
+
   const { data } = useQuery<PostDetail>({
-    queryKey: queryKey.post(`${slug}`),
-    enabled: false,
+    queryKey: queryKey.post(slug as string),
+    enabled: isReady, // 🔥 핵심
   })
 
   return data
