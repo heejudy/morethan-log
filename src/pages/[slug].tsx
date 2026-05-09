@@ -22,21 +22,35 @@ export const getStaticPaths = async () => {
   const filteredPost = filterPosts(posts, filter)
 
   return {
-    paths: filteredPost.map((row) => `/${row.slug}`),
-    fallback: true,
+    paths: filteredPost.map((row) => ({
+      params: { slug: row.slug },
+    })),
+    fallback: "blocking",
   }
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const slug = context.params?.slug
+  const slug = Array.isArray(context.params?.slug)
+    ? context.params?.slug[0]
+    : context.params?.slug
 
   const posts = await getPosts()
   const feedPosts = filterPosts(posts)
   await queryClient.prefetchQuery(queryKey.posts(), () => feedPosts)
 
   const detailPosts = filterPosts(posts, filter)
-  const postDetail = detailPosts.find((t: any) => t.slug === slug)
-  const content = await getPageContent(postDetail?.id!)
+
+  const postDetail = detailPosts.find(
+    (t: any) => t.slug?.toLowerCase() === String(slug).toLowerCase()
+  )
+
+  if (!postDetail) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const content = await getPageContent(postDetail.id)
 
   await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
     ...postDetail,
