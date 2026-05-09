@@ -35,6 +35,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     : context.params?.slug
 
   const posts = await getPosts()
+
+  console.log("🔥 posts:", posts) // 👈 여기 추가
+
   const feedPosts = filterPosts(posts)
   await queryClient.prefetchQuery(queryKey.posts(), () => feedPosts)
 
