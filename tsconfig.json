@@ -3,36 +3,22 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    
     "allowJs": true,
-    "checkJs": false,
-
+    "checkJs": true,
     "skipLibCheck": true,
     "strict": true,
-
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
-
     "incremental": true,
-    
     "baseUrl": ".",
-
-    "types": ["node"]
+    "ignoreDeprecations": "6.0"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "site.config.js",
-    "src/types/**/*.d.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "site.config.js"],
   "exclude": ["node_modules"]
 }
