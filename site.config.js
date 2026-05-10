@@ -24,7 +24,7 @@ export const CONFIG = {
   link: "https://heeju-blog.vercel.app",
   since: 2026,
   lang: "ko-KR",
-  // ogImageGenerateURL: "https://heeju-blog.vercel.app/og-image.png",
+  ogImageGenerateURL: "https://heeju-blog.vercel.app/og-image.png",
 
   notionConfig: {
     pageId: process.env.NOTION_PAGE_ID,
