@@ -1,7 +1,7 @@
 export const CONFIG = {
   profile: {
     name: "heeju Mo",
-    image: "/app-icon.png",
+    image: "/app-icon.jpg",
     role: "frontend developer",
     bio: "heeju",
     email: "moheeju1223@gmail.com",
@@ -24,7 +24,7 @@ export const CONFIG = {
   link: "https://heeju-blog.vercel.app",
   since: 2026,
   lang: "ko-KR",
-  ogImageGenerateURL: "https://heeju-blog.vercel.app/og-image.png",
+  // ogImageGenerateURL: "https://heeju-blog.vercel.app/og-image.png",
 
   notionConfig: {
     pageId: process.env.NOTION_PAGE_ID,
