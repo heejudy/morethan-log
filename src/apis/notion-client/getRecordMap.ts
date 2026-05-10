@@ -313,6 +313,24 @@ n2m.setCustomTransformer("image", async (block: any) => {
 `.trim()
 })
 
+n2m.setCustomTransformer("toggle", async (block: any) => {
+  const text = renderRichText(block?.toggle?.rich_text)
+  const children = block?.has_children
+    ? await listAllBlockChildren(block.id)
+    : []
+  const childrenMarkdown = children.length
+    ? await toMarkdownString(children)
+    : ""
+  const childrenHtml = childrenMarkdown ? marked.parse(childrenMarkdown) : ""
+
+  return `
+<details class="notion-toggle">
+  <summary>${text || "&nbsp;"}</summary>
+  <div class="notion-toggle-content">${childrenHtml}</div>
+</details>
+`.trim()
+})
+
 n2m.setCustomTransformer("callout", async (block: any) => {
   const icon = block?.callout?.icon
   let iconHtml = ""

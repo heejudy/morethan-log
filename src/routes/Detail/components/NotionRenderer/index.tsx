@@ -106,6 +106,57 @@ const StyledWrapper = styled.div`
     display: inline;
   }
 
+  .notion-toggle {
+    margin: 0.25rem 0;
+  }
+
+  .notion-toggle > summary {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.35rem;
+    min-height: 1.65rem;
+    padding: 0.1rem 0;
+    border-radius: 4px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .notion-toggle > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .notion-toggle > summary::before {
+    content: "▶";
+    flex: 0 0 auto;
+    width: 1rem;
+    color: ${({ theme }) => theme.colors.gray10};
+    font-size: 0.65rem;
+    line-height: 1.75rem;
+    transform-origin: 45% 50%;
+    transition: transform 120ms ease;
+  }
+
+  .notion-toggle[open] > summary::before {
+    transform: rotate(90deg);
+  }
+
+  .notion-toggle > summary:hover {
+    background: rgba(55, 53, 47, 0.08);
+  }
+
+  .notion-toggle-content {
+    margin-left: 1.35rem;
+    padding: 0.05rem 0 0.25rem;
+  }
+
+  .notion-toggle-content > :first-child {
+    margin-top: 0.25rem;
+  }
+
+  .notion-toggle-content > :last-child {
+    margin-bottom: 0;
+  }
+
   code {
     font-family: "Fira Code", monospace;
     background: rgba(148, 163, 184, 0.15);
