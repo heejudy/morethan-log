@@ -10,6 +10,22 @@ type Props = {
   content: string
 }
 
+const getNotionBlockHash = (href?: string) => {
+  if (!href) return null
+  const ids = href.replace(/-/g, "").match(/[0-9a-f]{32}/gi)
+  const compactId = ids?.[ids.length - 1]
+  if (!compactId) return null
+
+  try {
+    const parsed = new URL(href)
+    const isNotionLink =
+      parsed.hostname === "notion.so" || parsed.hostname.endsWith(".notion.so")
+    return isNotionLink ? `#block-${compactId.toLowerCase()}` : null
+  } catch {
+    return href.startsWith("#") ? `#block-${compactId.toLowerCase()}` : null
+  }
+}
+
 const NotionRenderer: FC<Props> = ({ content }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -37,6 +53,34 @@ const NotionRenderer: FC<Props> = ({ content }) => {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
+          a({ href, children, ...props }) {
+            const internalHash = getNotionBlockHash(href)
+            const mappedHref = internalHash || href
+
+            return (
+              <a
+                {...props}
+                href={mappedHref}
+                target={internalHash ? undefined : props.target}
+                rel={internalHash ? undefined : props.rel}
+                onClick={(event) => {
+                  if (!internalHash) return
+
+                  const target = document.getElementById(internalHash.slice(1))
+                  if (!target) return
+
+                  event.preventDefault()
+                  if (target instanceof HTMLDetailsElement) {
+                    target.open = true
+                  }
+                  target.scrollIntoView({ behavior: "smooth", block: "start" })
+                  window.history.replaceState(null, "", internalHash)
+                }}
+              >
+                {children}
+              </a>
+            )
+          },
           code({ className, children, ...props }) {
             const mergedClassName = [className, "hljs"]
               .filter(Boolean)
@@ -108,6 +152,7 @@ const StyledWrapper = styled.div`
 
   .notion-toggle {
     margin: 0.25rem 0;
+    scroll-margin-top: 4rem;
   }
 
   .notion-toggle > summary {

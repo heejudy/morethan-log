@@ -81,9 +81,12 @@ const renderRichText = (richText: any[] = []) => {
         item?.annotations || {}
       )
       if (item?.href) {
-        return `<a href="${escapeHtml(
-          item.href
-        )}" target="_blank" rel="noopener noreferrer">${text}</a>`
+        const internalHref = mapInternalNotionHref(item.href)
+        const href = internalHref || item.href
+        const externalAttrs = internalHref
+          ? ""
+          : ` target="_blank" rel="noopener noreferrer"`
+        return `<a href="${escapeHtml(href)}"${externalAttrs}>${text}</a>`
       }
       return text
     })
@@ -106,6 +109,29 @@ const escapeHtml = (value: string) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;")
+
+const getNotionBlockAnchor = (value?: string) => {
+  if (!value) return null
+  const ids = value.replace(/-/g, "").match(/[0-9a-f]{32}/gi)
+  const compactId = ids?.[ids.length - 1]
+  return compactId ? `block-${compactId.toLowerCase()}` : null
+}
+
+const mapInternalNotionHref = (href?: string) => {
+  if (!href) return null
+
+  const anchor = getNotionBlockAnchor(href)
+  if (!anchor) return null
+
+  try {
+    const parsed = new URL(href)
+    const isNotionLink =
+      parsed.hostname === "notion.so" || parsed.hostname.endsWith(".notion.so")
+    return isNotionLink ? `#${anchor}` : null
+  } catch {
+    return href.startsWith("#") ? `#${anchor}` : null
+  }
+}
 
 const parseImageCaption = (caption: string) => {
   const widthMatch = caption.match(/\b(?:w|width)\s*[:=]\s*([\d.]+%|\d+px)\b/i)
@@ -315,6 +341,7 @@ n2m.setCustomTransformer("image", async (block: any) => {
 
 n2m.setCustomTransformer("toggle", async (block: any) => {
   const text = renderRichText(block?.toggle?.rich_text)
+  const anchor = getNotionBlockAnchor(block?.id)
   const children = block?.has_children
     ? await listAllBlockChildren(block.id)
     : []
@@ -324,7 +351,7 @@ n2m.setCustomTransformer("toggle", async (block: any) => {
   const childrenHtml = childrenMarkdown ? marked.parse(childrenMarkdown) : ""
 
   return `
-<details class="notion-toggle">
+<details class="notion-toggle"${anchor ? ` id="${anchor}"` : ""}>
   <summary>${text || "&nbsp;"}</summary>
   <div class="notion-toggle-content">${childrenHtml}</div>
 </details>
