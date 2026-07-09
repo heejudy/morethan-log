@@ -13,6 +13,7 @@ import PostList from "./PostList"
 import PinnedPosts from "./PostList/PinnedPosts"
 
 const HEADER_HEIGHT = 73
+const STICKY_TOP = HEADER_HEIGHT + 24
 
 type Props = {}
 
@@ -23,23 +24,8 @@ const Feed: React.FC<Props> = () => {
     <StyledWrapper>
       <div
         className="lt"
-        css={{
-          height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-        }}
       >
         <TagList />
-      </div>
-      <div
-        className="rt"
-        css={{
-          height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-        }}
-      >
-        <ContactCard />
-        <div className="footer">
-          <Footer />
-        </div>
-        {/* <ServiceCard /> */}
       </div>
       <div className="mid">
         <MobileProfileCard />
@@ -54,7 +40,16 @@ const Feed: React.FC<Props> = () => {
           <Footer />
         </div>
       </div>
-      <ProfileCard />
+      <div
+        className="rt"
+      >
+        <ProfileCard /> 
+        <ContactCard />
+        <div className="footer">
+          <Footer />
+        </div>
+        {/* <ServiceCard /> */}
+      </div>
     </StyledWrapper>
   )
 }
@@ -81,10 +76,12 @@ const StyledWrapper = styled.div`
 
   > .lt {
     display: none;
-    overflow: scroll;
+    overflow-y: auto;
     position: sticky;
     grid-column: span 2 / span 2;
-    top: ${HEADER_HEIGHT - 10}px;
+    top: ${STICKY_TOP}px;
+    max-height: calc(100vh - ${STICKY_TOP}px - 2rem);
+    padding-bottom: 1rem;
 
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -129,9 +126,11 @@ const StyledWrapper = styled.div`
     }
 
     display: none;
-    overflow: scroll;
+    overflow-y: auto;
     position: sticky;
-    top: ${HEADER_HEIGHT - 10}px;
+    top: ${STICKY_TOP}px;
+    max-height: calc(100vh - ${STICKY_TOP}px - 2rem);
+    padding-bottom: 1rem;
 
     @media (min-width: 1024px) {
       display: block;
