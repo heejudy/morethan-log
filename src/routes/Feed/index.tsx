@@ -22,6 +22,14 @@ const Feed: React.FC<Props> = () => {
   return (
     <StyledWrapper>
       <div
+        className="lt"
+        css={{
+          height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+        }}
+      >
+        <TagList />
+      </div>
+      <div
         className="rt"
         css={{
           height: `calc(100vh - ${HEADER_HEIGHT}px)`,
@@ -43,14 +51,6 @@ const Feed: React.FC<Props> = () => {
         </div>
         <FeedHeader />
         <PostList q={q} />
-        {/* <div
-          className="lt"
-          css={{
-            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-          }}
-        >
-          <TagList />
-        </div> */}
         <div className="footer">
           <Footer />
         </div>
@@ -64,9 +64,9 @@ export default Feed
 const StyledWrapper = styled.div`
   grid-template-columns: repeat(12, minmax(0, 1fr));
 
-  padding: 2.75rem 0 3rem;
+  padding: 2.5rem 0 3rem;
   display: grid;
-  gap: 2rem;
+  gap: 1.75rem;
 
   @media (max-width: 768px) {
     display: block;
@@ -102,7 +102,7 @@ const StyledWrapper = styled.div`
     min-width: 0;
 
     @media (min-width: 1024px) {
-      grid-column: span 9 / span 9;
+      grid-column: span 7 / span 7;
     }
 
     > .tags {

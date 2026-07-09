@@ -196,13 +196,15 @@ export default NotionRenderer
 
 const StyledWrapper = styled.div`
   font-size: 1rem;
-  line-height: 1.75;
+  line-height: 1.8;
+  color: ${({ theme }) => theme.colors.gray11};
 
   h1,
   h2,
   h3 {
     scroll-margin-top: 5rem;
     font-weight: 600;
+    color: ${({ theme }) => theme.colors.gray11};
     margin: 2rem 0 0.8rem;
   }
 
@@ -322,22 +324,26 @@ const StyledWrapper = styled.div`
 
   code {
     font-family: "Fira Code", monospace;
-    background: rgba(148, 163, 184, 0.15);
+    background: ${({ theme }) => theme.colors.gray3};
     padding: 0.1rem 0.3rem;
     border-radius: 4px;
+    color: ${({ theme }) => theme.colors.red10};
   }
 
   pre {
-    background: #0f172a;
-    color: #e2e8f0;
+    background: ${({ theme }) =>
+      theme.scheme === "light" ? "#f6f6f4" : "#111827"};
+    color: ${({ theme }) =>
+      theme.scheme === "light" ? theme.colors.gray11 : "#e2e8f0"};
     padding: 1rem;
-    border-radius: 12px;
+    border-radius: 6px;
     overflow-x: auto;
   }
 
   pre code {
     background: transparent;
     padding: 0;
+    color: inherit;
   }
 
   img {

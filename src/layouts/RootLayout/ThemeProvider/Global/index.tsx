@@ -13,22 +13,9 @@ export const Global = () => {
           margin: 0;
           padding: 0;
           color: ${theme.colors.gray12};
-          background:
-            radial-gradient(
-              circle at top left,
-              ${theme.scheme === "light"
-                ? "rgba(255, 172, 140, 0.18)"
-                : "rgba(139, 92, 246, 0.16)"}
-              0,
-              transparent 32rem
-            ),
-            linear-gradient(
-              180deg,
-              ${theme.scheme === "light" ? "#fffaf5" : "#15151a"} 0%,
-              ${theme.colors.gray2} 42rem
-            );
+          background-color: ${theme.scheme === "light" ? "#f7f7f7" : theme.colors.gray2};
           font-family: ${pretendard.style.fontFamily};
-          font-weight: ${pretendard.style.fontWeight};
+          font-weight: 400;
           font-style: ${pretendard.style.fontStyle};
           min-height: 100vh;
         }

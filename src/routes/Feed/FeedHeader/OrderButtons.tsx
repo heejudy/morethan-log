@@ -49,7 +49,7 @@ const StyledWrapper = styled.div`
     color: ${({ theme }) => theme.colors.gray10};
 
     &[data-active="true"] {
-      font-weight: 700;
+      font-weight: 600;
 
       color: ${({ theme }) => theme.colors.gray12};
     }

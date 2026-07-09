@@ -28,17 +28,11 @@ export default ProfileCard
 const StyledWrapper = styled.div`
   > .content {
     margin-bottom: 1rem;
-    border-radius: 1.25rem;
+    border-radius: 1rem;
     width: 100%;
     background-color: ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(255, 255, 255, 0.82)" : "rgba(33, 33, 39, 0.88)"};
-    border: 1px solid
-      ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
-    box-shadow: ${({ theme }) =>
-      theme.scheme === "light"
-        ? "0 16px 42px rgba(37, 24, 16, 0.08)"
-        : "0 16px 42px rgba(0, 0, 0, 0.22)"};
+      theme.scheme === "light" ? "#fff" : theme.colors.gray4};
+    border: 1px solid ${({ theme }) => theme.colors.gray4};
     @media (min-width: 768px) {
       padding: 1rem;
     }
@@ -67,7 +61,8 @@ const StyledWrapper = styled.div`
       .name {
         font-size: 1.25rem;
         line-height: 1.75rem;
-        font-weight: 800;
+        font-style: italic;
+        font-weight: 700;
       }
       .role {
         margin-bottom: 1rem;

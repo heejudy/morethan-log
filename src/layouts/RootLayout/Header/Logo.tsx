@@ -13,21 +13,8 @@ const Logo = () => {
 export default Logo
 
 const StyledWrapper = styled(Link)`
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: 1.05rem;
+  font-weight: 700;
   letter-spacing: 0;
   color: ${({ theme }) => theme.colors.gray12};
-
-  &:after {
-    content: "";
-    display: block;
-    width: 1.75rem;
-    height: 2px;
-    margin-top: 0.2rem;
-    border-radius: 999px;
-    background: ${({ theme }) =>
-      theme.scheme === "light"
-        ? "linear-gradient(90deg, #f97316, #ec4899)"
-        : "linear-gradient(90deg, #a78bfa, #22d3ee)"};
-  }
 `

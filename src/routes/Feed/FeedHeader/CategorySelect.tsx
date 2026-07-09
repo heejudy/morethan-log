@@ -57,7 +57,7 @@ const StyledWrapper = styled.div`
     align-items: center;
     font-size: 1.25rem;
     line-height: 1.75rem;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
   }
   > .content {

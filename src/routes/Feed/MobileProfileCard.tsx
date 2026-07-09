@@ -43,21 +43,15 @@ const StyledWrapper = styled.div`
   > .top {
     padding: 0.25rem;
     margin-bottom: 0.75rem;
-    font-weight: 800;
+    font-weight: 600;
   }
   > .mid {
     padding: 0.75rem;
     margin-bottom: 1rem;
-    border-radius: 1.25rem;
+    border-radius: 1rem;
     background-color: ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(255, 255, 255, 0.84)" : "rgba(33, 33, 39, 0.88)"};
-    border: 1px solid
-      ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
-    box-shadow: ${({ theme }) =>
-      theme.scheme === "light"
-        ? "0 14px 34px rgba(37, 24, 16, 0.07)"
-        : "0 14px 34px rgba(0, 0, 0, 0.22)"};
+      theme.scheme === "light" ? "#fff" : theme.colors.gray4};
+    border: 1px solid ${({ theme }) => theme.colors.gray4};
     > .wrapper {
       display: flex;
       gap: 0.85rem;
@@ -71,7 +65,8 @@ const StyledWrapper = styled.div`
         > .top {
           font-size: 1.25rem;
           line-height: 1.75rem;
-          font-weight: 800;
+          font-style: italic;
+          font-weight: 700;
         }
         > .mid {
           margin-bottom: 0.5rem;

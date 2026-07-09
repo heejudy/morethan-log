@@ -29,15 +29,11 @@ const StyledWrapper = styled.div`
   position: sticky;
   top: 0;
   background-color: ${({ theme }) =>
-    theme.scheme === "light" ? "rgba(255, 250, 245, 0.82)" : "rgba(21, 21, 26, 0.82)"};
+    theme.scheme === "light" ? "rgba(247, 247, 247, 0.9)" : "rgba(21, 21, 26, 0.9)"};
   border-bottom: 1px solid
     ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
-  box-shadow: ${({ theme }) =>
-    theme.scheme === "light"
-      ? "0 10px 30px rgba(37, 24, 16, 0.06)"
-      : "0 10px 30px rgba(0, 0, 0, 0.18)"};
-  backdrop-filter: blur(18px);
+      theme.scheme === "light" ? "rgba(0, 0, 0, 0.06)" : "rgba(255, 255, 255, 0.08)"};
+  backdrop-filter: blur(10px);
 
   .container {
     display: flex;
@@ -46,8 +42,8 @@ const StyledWrapper = styled.div`
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 1120px;
-    height: 3rem;
+    max-width: 1040px;
+    height: 4.5rem;
     margin: 0 auto;
     &[data-full-width="true"] {
       @media (min-width: 768px) {

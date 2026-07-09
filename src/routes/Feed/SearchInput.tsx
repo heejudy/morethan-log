@@ -31,7 +31,7 @@ const StyledWrapper = styled.div`
   > .top {
     padding: 0.25rem;
     margin-bottom: 0.75rem;
-    font-weight: 800;
+    font-weight: 600;
   }
   > .mid {
     padding-top: 0.8rem;
@@ -41,19 +41,12 @@ const StyledWrapper = styled.div`
     border-radius: 999px;
     outline-style: none;
     width: 100%;
-    background-color: ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(255, 255, 255, 0.82)" : "rgba(33, 33, 39, 0.88)"};
-    border: 1px solid
-      ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
-    box-shadow: ${({ theme }) =>
-      theme.scheme === "light"
-        ? "0 12px 30px rgba(37, 24, 16, 0.06)"
-        : "0 12px 30px rgba(0, 0, 0, 0.18)"};
+    background-color: ${({ theme }) => theme.colors.gray3};
+    border: 1px solid ${({ theme }) => theme.colors.gray4};
 
     &:focus {
       border-color: ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(236, 72, 153, 0.45)" : "rgba(34, 211, 238, 0.45)"};
+        theme.scheme === "light" ? theme.colors.gray7 : theme.colors.gray8};
     }
   }
 `

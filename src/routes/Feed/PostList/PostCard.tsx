@@ -72,26 +72,17 @@ const StyledWrapper = styled(Link)`
     overflow: hidden;
     position: relative;
     background-color: ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(255, 255, 255, 0.86)" : "rgba(33, 33, 39, 0.88)"};
-    border: 1px solid
-      ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
-    box-shadow: ${({ theme }) =>
-      theme.scheme === "light"
-        ? "0 16px 40px rgba(37, 24, 16, 0.06)"
-        : "0 16px 40px rgba(0, 0, 0, 0.2)"};
+      theme.scheme === "light" ? "#fff" : theme.colors.gray4};
+    border: 1px solid ${({ theme }) => theme.colors.gray4};
+    border-radius: 1rem;
     transition-property: transform, box-shadow, border-color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 220ms;
 
     &:hover {
-      transform: translateY(-4px);
-      border-color: ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(236, 72, 153, 0.28)" : "rgba(34, 211, 238, 0.28)"};
-      box-shadow: ${({ theme }) =>
-        theme.scheme === "light"
-          ? "0 22px 52px rgba(37, 24, 16, 0.12)"
-          : "0 22px 52px rgba(0, 0, 0, 0.34)"};
+      transform: translateY(-2px);
+      border-color: ${({ theme }) => theme.colors.gray6};
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
     }
 
     &:hover .top h2 {
@@ -117,7 +108,7 @@ const StyledWrapper = styled(Link)`
     }
 
     > .content {
-      padding: 1.25rem;
+      padding: 1.2rem;
       display: flex;
       gap: 1.25rem;
 
@@ -128,10 +119,10 @@ const StyledWrapper = styled(Link)`
         padding-top: 1.25rem;
       }
       > .thumbnail {
-        flex: 0 0 180px;
+        flex: 0 0 160px;
         position: relative;
-        width: 180px;
-        min-height: 132px;
+        width: 160px;
+        min-height: 120px;
         object-fit: cover;
         background-color: ${({ theme }) => theme.colors.gray2};
         border-radius: 0.875rem;
@@ -165,7 +156,7 @@ const StyledWrapper = styled(Link)`
             margin-bottom: 0.5rem;
             font-size: 1.125rem;
             line-height: 1.75rem;
-            font-weight: 800;
+            font-weight: 600;
             cursor: pointer;
             transition: background-position 300ms ease, color 300ms ease;
 
@@ -193,7 +184,7 @@ const StyledWrapper = styled(Link)`
           p {
             display: none;
             margin: 0;
-            line-height: 1.75rem;
+            line-height: 1.7rem;
             color: ${({ theme }) => theme.colors.gray11};
 
             @media (min-width: 768px) {

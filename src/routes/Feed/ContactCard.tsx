@@ -67,12 +67,10 @@ const StyledWrapper = styled.div`
   display: flex;
   padding: 0.35rem;
   flex-direction: column;
-  border-radius: 1.25rem;
+  border-radius: 1rem;
   background-color: ${({ theme }) =>
-    theme.scheme === "light" ? "rgba(255, 255, 255, 0.82)" : "rgba(33, 33, 39, 0.88)"};
-  border: 1px solid
-    ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
+    theme.scheme === "light" ? "#fff" : theme.colors.gray4};
+  border: 1px solid ${({ theme }) => theme.colors.gray4};
   a {
     display: flex;
     padding: 0.75rem;
@@ -84,8 +82,7 @@ const StyledWrapper = styled.div`
 
     :hover {
       color: ${({ theme }) => theme.colors.gray12};
-      background-color: ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(236, 72, 153, 0.08)" : "rgba(34, 211, 238, 0.08)"};
+      background-color: ${({ theme }) => theme.colors.gray3};
     }
     .icon {
       font-size: 1.5rem;

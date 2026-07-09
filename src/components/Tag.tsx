@@ -29,10 +29,10 @@ const StyledWrapper = styled.div`
   border-radius: 50px;
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   color: ${({ theme }) => theme.colors.gray11};
   background: ${({ theme }) =>
-    theme.scheme === "light" ? "rgba(249, 115, 22, 0.08)" : "rgba(167, 139, 250, 0.12)"};
+    theme.scheme === "light" ? theme.colors.gray3 : theme.colors.gray5};
   cursor: pointer;
 
   &:hover {

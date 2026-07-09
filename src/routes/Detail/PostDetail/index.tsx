@@ -75,21 +75,12 @@ const StyledWrapper = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  border-radius: 1.5rem;
+  padding: 3rem 2rem 4rem;
   max-width: 56rem;
   background-color: ${({ theme }) =>
-    theme.scheme === "light" ? "rgba(255, 255, 255, 0.88)" : "rgba(33, 33, 39, 0.9)"};
-  border: 1px solid
-    ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
-  box-shadow: ${({ theme }) =>
-    theme.scheme === "light"
-      ? "0 20px 54px rgba(37, 24, 16, 0.08)"
-      : "0 20px 54px rgba(0, 0, 0, 0.28)"};
+    theme.scheme === "light" ? "#fff" : theme.colors.gray3};
+  border-left: 1px solid ${({ theme }) => theme.colors.gray4};
+  border-right: 1px solid ${({ theme }) => theme.colors.gray4};
   margin: 0 auto;
 
   @media (min-width: 1180px) {
@@ -101,8 +92,7 @@ const StyledWrapper = styled.div`
   }
 
   @media (max-width: 640px) {
-    padding: 1.25rem;
-    border-radius: 1.25rem;
+    padding: 2rem 1.25rem 3rem;
   }
 
   > article {
@@ -118,13 +108,9 @@ const StyledWrapper = styled.div`
 `
 
 const StyledToc = styled.aside`
-  padding: 1rem;
-  border-radius: 1rem;
-  background: ${({ theme }) =>
-    theme.scheme === "light" ? "rgba(255, 250, 245, 0.74)" : "rgba(255, 255, 255, 0.04)"};
-  border: 1px solid
-    ${({ theme }) =>
-      theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  border-left: 1px solid ${({ theme }) => theme.colors.gray5};
+  background: transparent;
 
   @media (min-width: 1180px) {
     position: sticky;
@@ -168,8 +154,7 @@ const StyledToc = styled.aside`
 
     &:hover {
       color: ${({ theme }) => theme.colors.gray12};
-      background: ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(236, 72, 153, 0.08)" : "rgba(34, 211, 238, 0.08)"};
+      background: ${({ theme }) => theme.colors.gray3};
     }
   }
 `
