@@ -24,8 +24,10 @@ const PostDetail: React.FC<Props> = () => {
 
   const category = (data.category && data.category?.[0]) || undefined
 
+  const hasTableOfContents = tableOfContents.length >= 2
+
   return (
-    <StyledWrapper>
+    <StyledWrapper data-has-toc={hasTableOfContents}>
       <TableOfContents items={tableOfContents} />
       <article>
         {category && (
@@ -78,7 +80,7 @@ const StyledWrapper = styled.div`
   padding-top: 3rem;
   padding-bottom: 3rem;
   border-radius: 1.5rem;
-  max-width: 76rem;
+  max-width: 56rem;
   background-color: ${({ theme }) =>
     theme.scheme === "light" ? "rgba(255, 255, 255, 0.88)" : "rgba(33, 33, 39, 0.9)"};
   border: 1px solid
@@ -91,8 +93,11 @@ const StyledWrapper = styled.div`
   margin: 0 auto;
 
   @media (min-width: 1180px) {
-    grid-template-columns: minmax(0, 42rem) 14rem;
-    align-items: start;
+    &[data-has-toc="true"] {
+      grid-template-columns: minmax(0, 42rem) 14rem;
+      align-items: start;
+      max-width: 76rem;
+    }
   }
 
   @media (max-width: 640px) {
@@ -132,7 +137,7 @@ const StyledToc = styled.aside`
     margin-bottom: 0.75rem;
     font-size: 0.78rem;
     line-height: 1rem;
-    font-weight: 800;
+    font-weight: 600;
     color: ${({ theme }) => theme.colors.gray11};
     text-transform: uppercase;
   }

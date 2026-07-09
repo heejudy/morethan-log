@@ -202,22 +202,22 @@ const StyledWrapper = styled.div`
   h2,
   h3 {
     scroll-margin-top: 5rem;
-    font-weight: 800;
+    font-weight: 600;
     margin: 2rem 0 0.8rem;
   }
 
   h1 {
-    font-size: 2rem;
-    line-height: 2.5rem;
+    font-size: 1.75rem;
+    line-height: 2.35rem;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     line-height: 2rem;
   }
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.75rem;
   }
 
@@ -280,7 +280,7 @@ const StyledWrapper = styled.div`
     border-radius: 0;
     cursor: pointer;
     list-style: none;
-    font-weight: 700;
+    font-weight: 500;
   }
 
   .notion-toggle > summary::-webkit-details-marker {
