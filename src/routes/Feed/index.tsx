@@ -64,13 +64,13 @@ export default Feed
 const StyledWrapper = styled.div`
   grid-template-columns: repeat(12, minmax(0, 1fr));
 
-  padding: 2rem 0;
+  padding: 2.75rem 0 3rem;
   display: grid;
-  gap: 1.5rem;
+  gap: 2rem;
 
   @media (max-width: 768px) {
     display: block;
-    padding: 0.5rem 0;
+    padding: 1rem 0 2rem;
   }
 
   > .profile {
@@ -99,6 +99,7 @@ const StyledWrapper = styled.div`
 
   > .mid {
     grid-column: span 12 / span 12;
+    min-width: 0;
 
     @media (min-width: 1024px) {
       grid-column: span 9 / span 9;

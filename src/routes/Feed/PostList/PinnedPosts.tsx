@@ -47,7 +47,9 @@ const StyledWrapper = styled.div`
     margin-bottom: 1rem;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray6};
+    border-bottom: 1px solid
+      ${({ theme }) =>
+        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
   }
   .header {
     display: flex;
@@ -57,7 +59,13 @@ const StyledWrapper = styled.div`
     align-items: center;
     font-size: 1.25rem;
     line-height: 1.75rem;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
+  }
+
+  .my-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 `

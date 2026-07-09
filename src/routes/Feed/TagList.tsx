@@ -59,6 +59,7 @@ const StyledWrapper = styled.div`
     display: none;
     padding: 0.25rem;
     margin-bottom: 0.75rem;
+    font-weight: 800;
 
     @media (min-width: 1024px) {
       display: block;
@@ -84,7 +85,7 @@ const StyledWrapper = styled.div`
 
     a {
       display: block;
-      padding: 0.25rem;
+      padding: 0.35rem;
       padding-left: 1rem;
       padding-right: 1rem;
       margin-top: 0.25rem;
@@ -97,14 +98,17 @@ const StyledWrapper = styled.div`
       cursor: pointer;
 
       :hover {
-        background-color: ${({ theme }) => theme.colors.gray4};
+        background-color: ${({ theme }) =>
+          theme.scheme === "light" ? "rgba(236, 72, 153, 0.08)" : "rgba(34, 211, 238, 0.08)"};
       }
       &[data-active="true"] {
         color: ${({ theme }) => theme.colors.gray12};
-        background-color: ${({ theme }) => theme.colors.gray4};
+        background-color: ${({ theme }) =>
+          theme.scheme === "light" ? "rgba(249, 115, 22, 0.12)" : "rgba(167, 139, 250, 0.16)"};
 
         :hover {
-          background-color: ${({ theme }) => theme.colors.gray4};
+          background-color: ${({ theme }) =>
+            theme.scheme === "light" ? "rgba(249, 115, 22, 0.12)" : "rgba(167, 139, 250, 0.16)"};
         }
       }
     }

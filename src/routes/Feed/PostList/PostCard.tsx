@@ -37,7 +37,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
               />
             </div>
           )}
-          <div className="wrapper">
+          <div data-thumb={!!data.thumbnail} className="wrapper">
             <div className="tags">
               {data.tags &&
                 data.tags.map((tag: string, idx: number) => (
@@ -72,23 +72,35 @@ const StyledWrapper = styled(Link)`
     overflow: hidden;
     position: relative;
     background-color: ${({ theme }) =>
-      theme.scheme === "light" ? "white" : theme.colors.gray4};
-    transition-property: transform, box-shadow;
+      theme.scheme === "light" ? "rgba(255, 255, 255, 0.86)" : "rgba(33, 33, 39, 0.88)"};
+    border: 1px solid
+      ${({ theme }) =>
+        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
+    box-shadow: ${({ theme }) =>
+      theme.scheme === "light"
+        ? "0 16px 40px rgba(37, 24, 16, 0.06)"
+        : "0 16px 40px rgba(0, 0, 0, 0.2)"};
+    transition-property: transform, box-shadow, border-color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
+    transition-duration: 220ms;
 
     &:hover {
-      transform: scale(0.95);
-      border-radius: 16px;
+      transform: translateY(-4px);
+      border-color: ${({ theme }) =>
+        theme.scheme === "light" ? "rgba(236, 72, 153, 0.28)" : "rgba(34, 211, 238, 0.28)"};
+      box-shadow: ${({ theme }) =>
+        theme.scheme === "light"
+          ? "0 22px 52px rgba(37, 24, 16, 0.12)"
+          : "0 22px 52px rgba(0, 0, 0, 0.34)"};
     }
 
     &:hover .top h2 {
       background-image: linear-gradient(
         90deg,
-        #ffccdb,
-        #ff6f9f,
-        #ffccdb,
-        #ff6f9f
+        ${({ theme }) =>
+          theme.scheme === "light"
+            ? "#f97316, #ec4899, #f97316"
+            : "#a78bfa, #22d3ee, #a78bfa"}
       );
       background-size: 300% 100%;
       -webkit-background-clip: text;
@@ -105,28 +117,37 @@ const StyledWrapper = styled(Link)`
     }
 
     > .content {
-      padding: 2rem 1rem;
+      padding: 1.25rem;
       display: flex;
+      gap: 1.25rem;
 
       &[data-thumb="false"] {
-        padding-top: 3.5rem;
+        padding-top: 3.25rem;
       }
       &[data-category="false"] {
-        padding-top: 1.5rem;
+        padding-top: 1.25rem;
       }
       > .thumbnail {
+        flex: 0 0 180px;
         position: relative;
-        width: 200px;
+        width: 180px;
+        min-height: 132px;
         object-fit: cover;
         background-color: ${({ theme }) => theme.colors.gray2};
+        border-radius: 0.875rem;
+        overflow: hidden;
+
+        @media (max-width: 640px) {
+          flex-basis: 108px;
+          width: 108px;
+          min-height: 108px;
+        }
       }
       > .wrapper {
         display: flex;
         flex-direction: column;
-        /* padding-left only if thumbnail exists */
-        padding-left: 1rem;
-
-        /* Remove padding-left if no thumbnail */
+        min-width: 0;
+        flex: 1;
         &[data-thumb="false"] {
           padding-left: 0;
         }
@@ -144,7 +165,7 @@ const StyledWrapper = styled(Link)`
             margin-bottom: 0.5rem;
             font-size: 1.125rem;
             line-height: 1.75rem;
-            font-weight: 600;
+            font-weight: 800;
             cursor: pointer;
             transition: background-position 300ms ease, color 300ms ease;
 
@@ -172,7 +193,7 @@ const StyledWrapper = styled(Link)`
           p {
             display: none;
             margin: 0;
-            line-height: 2rem;
+            line-height: 1.75rem;
             color: ${({ theme }) => theme.colors.gray11};
 
             @media (min-width: 768px) {
@@ -183,6 +204,8 @@ const StyledWrapper = styled(Link)`
         > .tags {
           display: flex;
           gap: 0.5rem;
+          flex-wrap: wrap;
+          margin-bottom: 0.35rem;
         }
       }
     }

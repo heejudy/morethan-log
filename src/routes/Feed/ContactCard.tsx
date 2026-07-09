@@ -65,23 +65,27 @@ const StyledTitle = styled.div`
 `
 const StyledWrapper = styled.div`
   display: flex;
-  padding: 0.25rem;
+  padding: 0.35rem;
   flex-direction: column;
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   background-color: ${({ theme }) =>
-    theme.scheme === "light" ? "white" : theme.colors.gray4};
+    theme.scheme === "light" ? "rgba(255, 255, 255, 0.82)" : "rgba(33, 33, 39, 0.88)"};
+  border: 1px solid
+    ${({ theme }) =>
+      theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
   a {
     display: flex;
     padding: 0.75rem;
     gap: 0.75rem;
     align-items: center;
-    border-radius: 1rem;
+    border-radius: 0.9rem;
     color: ${({ theme }) => theme.colors.gray11};
     cursor: pointer;
 
     :hover {
       color: ${({ theme }) => theme.colors.gray12};
-      background-color: ${({ theme }) => theme.colors.gray5};
+      background-color: ${({ theme }) =>
+        theme.scheme === "light" ? "rgba(236, 72, 153, 0.08)" : "rgba(34, 211, 238, 0.08)"};
     }
     .icon {
       font-size: 1.5rem;

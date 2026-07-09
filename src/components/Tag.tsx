@@ -24,11 +24,18 @@ export default Tag
 const StyledWrapper = styled.div`
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+  padding-left: 0.55rem;
   padding-right: 0.5rem;
   border-radius: 50px;
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: 400;
-  color: ${({ theme }) => theme.colors.gray10};
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.gray11};
+  background: ${({ theme }) =>
+    theme.scheme === "light" ? "rgba(249, 115, 22, 0.08)" : "rgba(167, 139, 250, 0.12)"};
   cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.gray12};
+  }
 `

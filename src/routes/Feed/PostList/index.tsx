@@ -53,9 +53,9 @@ const PostList: React.FC<Props> = ({ q }) => {
 
   return (
     <>
-      <div className="my-2 ">
+      <StyledList className="my-2">
         {!filteredPosts.length && (
-          <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>
+          <p className="empty">Nothing! 😺</p>
         )}
         {filteredPosts.map((post, i) => (
           <StyledWrapper
@@ -69,35 +69,41 @@ const PostList: React.FC<Props> = ({ q }) => {
             }
           >
             <PostCard data={post} />
-            {i !== filteredPosts.length - 1 && (
-              <section className="section"></section>
-            )}
           </StyledWrapper>
         ))}
-      </div>
+      </StyledList>
     </>
   )
 }
 
 export default PostList
 
+const StyledList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .empty {
+    margin: 0;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    color: ${({ theme }) => theme.colors.gray10};
+    background-color: ${({ theme }) =>
+      theme.scheme === "light" ? "rgba(255, 255, 255, 0.82)" : theme.colors.gray4};
+  }
+`
+
 const StyledWrapper = styled.div`
   &[data-rounded="top"] article {
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 1rem;
   }
 
   &[data-rounded="bottom"] article {
-    border-radius: 0 0 1rem 1rem;
+    border-radius: 1rem;
   }
 
   &[data-rounded="top"] article:hover,
   &[data-rounded="bottom"] article:hover {
     border-radius: 1rem;
-  }
-
-  > .section {
-    width: 100%;
-    height: 1px;
-    background-color: ${({ theme }) => theme.colors.gray6};
   }
 `

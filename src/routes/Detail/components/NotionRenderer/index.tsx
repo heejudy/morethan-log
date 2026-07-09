@@ -1,13 +1,75 @@
 import ReactMarkdown from "react-markdown"
 import rehypeRaw from "rehype-raw"
 import remarkGfm from "remark-gfm"
-import { FC, useEffect, useRef } from "react"
+import { FC, HTMLAttributes, ReactNode, useEffect, useRef } from "react"
 import styled from "@emotion/styled"
 import hljs from "highlight.js"
 import "highlight.js/styles/github-dark.css"
 
 type Props = {
   content: string
+}
+
+export type TocItem = {
+  id: string
+  text: string
+  level: 1 | 2 | 3
+}
+
+const stripHtml = (value: string) =>
+  value
+    .replace(/<[^>]*>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, "\"")
+    .replace(/&#39;/g, "'")
+    .trim()
+
+const getNodeText = (node: ReactNode): string => {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node)
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(getNodeText).join("")
+  }
+
+  return ""
+}
+
+export const createHeadingId = (text: string) => {
+  const normalized = stripHtml(text)
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .trim()
+    .replace(/\s+/g, "-")
+
+  return normalized || "section"
+}
+
+export const extractTableOfContents = (content: string): TocItem[] => {
+  const headings = [...content.matchAll(/<h([1-3])[^>]*>(.*?)<\/h\1>/gis)]
+  const counts = new Map<string, number>()
+
+  return headings
+    .map((match) => {
+      const level = Number(match[1]) as TocItem["level"]
+      const text = stripHtml(match[2])
+      if (!text) return null
+
+      const baseId = createHeadingId(text)
+      const count = counts.get(baseId) || 0
+      counts.set(baseId, count + 1)
+
+      return {
+        id: count ? `${baseId}-${count + 1}` : baseId,
+        text,
+        level,
+      }
+    })
+    .filter((item): item is TocItem => Boolean(item))
 }
 
 const getNotionBlockHash = (href?: string) => {
@@ -28,6 +90,7 @@ const getNotionBlockHash = (href?: string) => {
 
 const NotionRenderer: FC<Props> = ({ content }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const headingCountsRef = useRef(new Map<string, number>())
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -47,12 +110,41 @@ const NotionRenderer: FC<Props> = ({ content }) => {
 
   if (!content) return null
 
+  headingCountsRef.current = new Map()
+
+  const renderHeading = (
+    Tag: "h1" | "h2" | "h3",
+    children: ReactNode,
+    props: HTMLAttributes<HTMLHeadingElement>
+  ) => {
+    const text = getNodeText(children)
+    const baseId = createHeadingId(text)
+    const count = headingCountsRef.current.get(baseId) || 0
+    headingCountsRef.current.set(baseId, count + 1)
+    const id = count ? `${baseId}-${count + 1}` : baseId
+
+    return (
+      <Tag {...props} id={id}>
+        {children}
+      </Tag>
+    )
+  }
+
   return (
     <StyledWrapper ref={containerRef}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
+          h1({ children, ...props }) {
+            return renderHeading("h1", children, props)
+          },
+          h2({ children, ...props }) {
+            return renderHeading("h2", children, props)
+          },
+          h3({ children, ...props }) {
+            return renderHeading("h3", children, props)
+          },
           a({ href, children, ...props }) {
             const internalHash = getNotionBlockHash(href)
             const mappedHref = internalHash || href
@@ -82,7 +174,8 @@ const NotionRenderer: FC<Props> = ({ content }) => {
             )
           },
           code({ className, children, ...props }) {
-            const mergedClassName = [className, "hljs"]
+            const isCodeBlock = className?.includes("language-")
+            const mergedClassName = [className, isCodeBlock ? "hljs" : ""]
               .filter(Boolean)
               .join(" ")
             return (
@@ -108,8 +201,24 @@ const StyledWrapper = styled.div`
   h1,
   h2,
   h3 {
-    font-weight: 500;
-    margin: 1.6rem 0 0.8rem;
+    scroll-margin-top: 5rem;
+    font-weight: 800;
+    margin: 2rem 0 0.8rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    line-height: 1.75rem;
   }
 
   p {
@@ -151,8 +260,15 @@ const StyledWrapper = styled.div`
   }
 
   .notion-toggle {
-    margin: 0.25rem 0;
+    margin: 0.75rem 0;
     scroll-margin-top: 4rem;
+    border: 1px solid
+      ${({ theme }) =>
+        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
+    border-radius: 0.85rem;
+    background: ${({ theme }) =>
+      theme.scheme === "light" ? "rgba(248, 250, 252, 0.78)" : "rgba(255, 255, 255, 0.04)"};
+    overflow: hidden;
   }
 
   .notion-toggle > summary {
@@ -160,10 +276,11 @@ const StyledWrapper = styled.div`
     align-items: flex-start;
     gap: 0.35rem;
     min-height: 1.65rem;
-    padding: 0.1rem 0;
-    border-radius: 4px;
+    padding: 0.7rem 0.85rem;
+    border-radius: 0;
     cursor: pointer;
     list-style: none;
+    font-weight: 700;
   }
 
   .notion-toggle > summary::-webkit-details-marker {
@@ -186,12 +303,13 @@ const StyledWrapper = styled.div`
   }
 
   .notion-toggle > summary:hover {
-    background: rgba(55, 53, 47, 0.08);
+    background: ${({ theme }) =>
+      theme.scheme === "light" ? "rgba(236, 72, 153, 0.08)" : "rgba(34, 211, 238, 0.08)"};
   }
 
   .notion-toggle-content {
-    margin-left: 1.35rem;
-    padding: 0.05rem 0 0.25rem;
+    margin-left: 0;
+    padding: 0.1rem 1rem 0.85rem 2.2rem;
   }
 
   .notion-toggle-content > :first-child {

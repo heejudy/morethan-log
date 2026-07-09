@@ -133,6 +133,88 @@ const mapInternalNotionHref = (href?: string) => {
   }
 }
 
+const renderCodeBlockHtml = (block: any) => {
+  const language = block?.code?.language || "plaintext"
+  const text = block?.code?.rich_text
+    ?.map((item: any) => item.plain_text || "")
+    .join("")
+    .replace(/^```[a-z0-9_-]*\n?/i, "")
+    .replace(/\n?```$/i, "")
+
+  return `<pre><code class="language-${escapeHtml(language)}">${escapeHtml(
+    text || ""
+  )}</code></pre>`
+}
+
+const renderBlocksHtml = async (blocks: any[]) => {
+  const htmlBlocks = await Promise.all(
+    blocks.map((block) => renderBlockHtml(block))
+  )
+  return htmlBlocks.filter(Boolean).join("")
+}
+
+const renderBlockHtml = async (block: any): Promise<string> => {
+  const type = block?.type
+  const value = block?.[type]
+
+  if (!type || !value) return ""
+
+  if (type === "paragraph") {
+    const text = renderRichText(value.rich_text)
+    return text ? `<p>${text}</p>` : ""
+  }
+
+  if (type === "code") {
+    return renderCodeBlockHtml(block)
+  }
+
+  if (type === "bulleted_list_item") {
+    return `<ul><li>${renderRichText(value.rich_text)}</li></ul>`
+  }
+
+  if (type === "numbered_list_item") {
+    return `<ol><li>${renderRichText(value.rich_text)}</li></ol>`
+  }
+
+  if (type === "heading_1") {
+    return `<h1>${renderRichText(value.rich_text)}</h1>`
+  }
+
+  if (type === "heading_2") {
+    return `<h2>${renderRichText(value.rich_text)}</h2>`
+  }
+
+  if (type === "heading_3") {
+    return `<h3>${renderRichText(value.rich_text)}</h3>`
+  }
+
+  if (type === "quote") {
+    return `<blockquote>${renderRichText(value.rich_text)}</blockquote>`
+  }
+
+  if (type === "divider") {
+    return "<hr />"
+  }
+
+  if (type === "toggle") {
+    const text = renderRichText(value.rich_text)
+    const anchor = getNotionBlockAnchor(block.id)
+    const children = block.has_children
+      ? await listAllBlockChildren(block.id)
+      : []
+    const childrenHtml = children.length ? await renderBlocksHtml(children) : ""
+
+    return `<details class="notion-toggle"${
+      anchor ? ` id="${anchor}"` : ""
+    }><summary>${
+      text || "&nbsp;"
+    }</summary><div class="notion-toggle-content">${childrenHtml}</div></details>`
+  }
+
+  const markdown = await toMarkdownString([block])
+  return markdown ? String(marked.parse(markdown)) : ""
+}
+
 const parseImageCaption = (caption: string) => {
   const widthMatch = caption.match(/\b(?:w|width)\s*[:=]\s*([\d.]+%|\d+px)\b/i)
   const width = widthMatch?.[1]
@@ -158,10 +240,7 @@ export const mapNotionImageUrl = (url: string, blockId?: string) => {
         parsed.hostname.startsWith("s3.us-west-2.") ||
         parsed.hostname.startsWith("s3-us-west-2."))
 
-    if (
-      isNotionS3 &&
-      parsed.searchParams.has("X-Amz-Signature")
-    ) {
+    if (isNotionS3 && parsed.searchParams.has("X-Amz-Signature")) {
       // Strip signatures before proxying; signatures are time-bound.
       url = parsed.origin + parsed.pathname
     }
@@ -345,10 +424,7 @@ n2m.setCustomTransformer("toggle", async (block: any) => {
   const children = block?.has_children
     ? await listAllBlockChildren(block.id)
     : []
-  const childrenMarkdown = children.length
-    ? await toMarkdownString(children)
-    : ""
-  const childrenHtml = childrenMarkdown ? marked.parse(childrenMarkdown) : ""
+  const childrenHtml = children.length ? await renderBlocksHtml(children) : ""
 
   return `
 <details class="notion-toggle"${anchor ? ` id="${anchor}"` : ""}>
@@ -429,7 +505,9 @@ n2m.setCustomTransformer("video", async (block: any) => {
     .join("")
     .trim()
   const safeCaption = captionText ? escapeHtml(captionText) : ""
-  const figcaption = safeCaption ? `<figcaption>${safeCaption}</figcaption>` : ""
+  const figcaption = safeCaption
+    ? `<figcaption>${safeCaption}</figcaption>`
+    : ""
 
   // YouTube
   const youtubeMatch = url.match(
