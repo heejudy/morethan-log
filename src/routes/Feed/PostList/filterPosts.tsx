@@ -1,4 +1,4 @@
-import { DEFAULT_CATEGORY } from "../../../constants"
+import { DEFAULT_CATEGORY, isHiddenFeedSlug } from "../../../constants"
 import { TPost } from "../../../types"
 
 interface FilterPostsParams {
@@ -17,6 +17,7 @@ export function filterPosts({
   order = "desc",
 }: FilterPostsParams): TPost[] {
   return posts
+    .filter((post) => !isHiddenFeedSlug(post.slug))
     .filter((post) => {
       const tagContent = post.tags ? post.tags.join(" ") : ""
       const searchContent = post.title + post.summary + tagContent

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import PostCard from "./PostCard"
-import { DEFAULT_CATEGORY } from "../../../constants"
+import { DEFAULT_CATEGORY, isHiddenFeedSlug } from "../../../constants"
 import usePostsQuery from "../../../hooks/usePostsQuery"
 import styled from "@emotion/styled"
 
@@ -20,7 +20,7 @@ const PostList: React.FC<Props> = ({ q }) => {
 
   useEffect(() => {
     setFilteredPosts(() => {
-      let newFilteredPosts = data
+      let newFilteredPosts = data.filter((post) => !isHiddenFeedSlug(post.slug))
       // keyword
       newFilteredPosts = newFilteredPosts.filter((post) => {
         const tagContent = post.tags ? post.tags.join(" ") : ""
@@ -49,7 +49,7 @@ const PostList: React.FC<Props> = ({ q }) => {
 
       return newFilteredPosts
     })
-  }, [q, currentTag, currentCategory, currentOrder, setFilteredPosts])
+  }, [data, q, currentTag, currentCategory, currentOrder, setFilteredPosts])
 
   return (
     <>
