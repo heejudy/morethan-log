@@ -98,9 +98,7 @@ const NotionRenderer: FC<Props> = ({ content }) => {
     const raf = requestAnimationFrame(() => {
       codeBlocks.forEach((block) => {
         const element = block as HTMLElement
-        if (!element.classList.contains("hljs")) {
-          element.classList.add("hljs")
-        }
+        if (element.dataset.highlighted === "yes") return
         hljs.highlightElement(element)
       })
     })
@@ -173,13 +171,10 @@ const NotionRenderer: FC<Props> = ({ content }) => {
               </a>
             )
           },
-          code({ className, children, ...props }) {
+          code({ className, children, node: _node, ...props }) {
             const isCodeBlock = className?.includes("language-")
-            const mergedClassName = [className, isCodeBlock ? "hljs" : ""]
-              .filter(Boolean)
-              .join(" ")
             return (
-              <code className={mergedClassName} {...props}>
+              <code className={className} {...props}>
                 {children}
               </code>
             )
@@ -209,12 +204,12 @@ const StyledWrapper = styled.div`
   }
 
   h1 {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
     line-height: 2.35rem;
   }
 
   h2 {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     line-height: 2rem;
   }
 

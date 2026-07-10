@@ -1,10 +1,7 @@
 import { CONFIG } from "../../../../../site.config"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import styled from "@emotion/styled"
 import useScheme from "../../../../hooks/useScheme"
-import { useRouter } from "next/router"
-
-//TODO: useRef?
 
 type Props = {
   issueTerm: string
@@ -12,14 +9,15 @@ type Props = {
 
 const Utterances: React.FC<Props> = ({ issueTerm }) => {
   const [scheme] = useScheme()
-  const router = useRouter()
+  const commentsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const theme = `github-${scheme}`
     const script = document.createElement("script")
-    const anchor = document.getElementById("comments")
+    const anchor = commentsRef.current
     if (!anchor) return
 
+    anchor.replaceChildren()
     script.setAttribute("src", "https://utteranc.es/client.js")
     script.setAttribute("crossorigin", "anonymous")
     script.setAttribute("async", `true`)
@@ -27,16 +25,21 @@ const Utterances: React.FC<Props> = ({ issueTerm }) => {
     script.setAttribute("theme", theme)
     const config: Record<string, string> = CONFIG.utterances.config
     Object.keys(config).forEach((key) => {
+      if (key === "issue-term") return
       script.setAttribute(key, config[key])
     })
     anchor.appendChild(script)
+
     return () => {
-      anchor.innerHTML = ""
+      if (anchor.isConnected) {
+        anchor.replaceChildren()
+      }
     }
-  }, [scheme, router])
+  }, [issueTerm])
+
   return (
     <>
-      <StyledWrapper id="comments">
+      <StyledWrapper id="comments" ref={commentsRef}>
         <div className="utterances-frame"></div>
       </StyledWrapper>
     </>
