@@ -18,6 +18,7 @@ export function filterPosts({
 }: FilterPostsParams): TPost[] {
   return posts
     .filter((post) => !isHiddenFeedSlug(post.slug))
+    .filter((post) => post.status?.[0] === "Public")
     .filter((post) => {
       const tagContent = post.tags ? post.tags.join(" ") : ""
       const searchContent = post.title + post.summary + tagContent

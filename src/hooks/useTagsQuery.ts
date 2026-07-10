@@ -6,7 +6,9 @@ export const useTagsQuery = () => {
   const posts = usePostsQuery()
   const tags = getAllSelectItemsFromPosts(
     "tags",
-    posts.filter((post) => !isHiddenFeedSlug(post.slug))
+    posts.filter(
+      (post) => !isHiddenFeedSlug(post.slug) && post.status?.[0] === "Public"
+    )
   )
 
   return tags

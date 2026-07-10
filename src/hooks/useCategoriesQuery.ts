@@ -5,7 +5,9 @@ import { isHiddenFeedSlug } from "../constants"
 
 export const useCategoriesQuery = () => {
   const posts = usePostsQuery()
-  const feedPosts = posts.filter((post) => !isHiddenFeedSlug(post.slug))
+  const feedPosts = posts.filter(
+    (post) => !isHiddenFeedSlug(post.slug) && post.status?.[0] === "Public"
+  )
   const categories = getAllSelectItemsFromPosts("category", feedPosts)
 
   return {

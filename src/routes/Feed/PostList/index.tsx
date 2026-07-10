@@ -20,7 +20,9 @@ const PostList: React.FC<Props> = ({ q }) => {
 
   useEffect(() => {
     setFilteredPosts(() => {
-      let newFilteredPosts = data.filter((post) => !isHiddenFeedSlug(post.slug))
+      let newFilteredPosts = data.filter(
+        (post) => !isHiddenFeedSlug(post.slug) && post.status?.[0] === "Public"
+      )
       // keyword
       newFilteredPosts = newFilteredPosts.filter((post) => {
         const tagContent = post.tags ? post.tags.join(" ") : ""

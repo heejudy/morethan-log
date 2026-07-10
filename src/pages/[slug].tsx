@@ -13,7 +13,7 @@ import usePostQuery from "../hooks/usePostQuery"
 import { FilterPostsOptions } from "../libs/utils/notion/filterPosts"
 
 const filter: FilterPostsOptions = {
-  acceptStatus: ["Public", "PublicOnDetail", "Private"],
+  acceptStatus: ["Public", "PublicOnDetail"],
   acceptType: ["Paper", "Post", "Page"],
 }
 
@@ -34,28 +34,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     ? context.params?.slug[0]
     : context.params?.slug
 
-  console.log("🔥 slug:", slug)
-
   const posts = await getPosts()
 
-  console.log("🔥 ALL POSTS:", posts.map(p => ({
-    title: p.title,
-    slug: p.slug,
-    status: p.status,
-    type: p.type,
-  })))
-
   const detailPosts = filterPosts(posts, filter)
-  console.log("🔥 detailPosts:", detailPosts)
 
   const postDetail = detailPosts.find(
     (t: any) => t.slug?.toLowerCase() === String(slug).toLowerCase()
   )
 
-  console.log("🔥 postDetail:", postDetail)
-
   if (!postDetail) {
-    console.log("❌ NOT FOUND:", slug)
     return { notFound: true }
   }
 
