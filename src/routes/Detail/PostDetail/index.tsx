@@ -81,18 +81,22 @@ const StyledWrapper = styled.div`
     theme.scheme === "light" ? "#fff" : theme.colors.gray3};
   border-left: 1px solid ${({ theme }) => theme.colors.gray4};
   border-right: 1px solid ${({ theme }) => theme.colors.gray4};
-  margin: 0 auto;
+  border-radius: 1rem;
+  margin: 2rem auto;
 
   @media (min-width: 1180px) {
     &[data-has-toc="true"] {
-      grid-template-columns: minmax(0, 42rem) 14rem;
+      grid-template-columns: minmax(0, 42rem) 8rem;
       align-items: start;
-      max-width: 76rem;
+      gap: 0.75rem;
+      max-width: 64rem;
     }
   }
 
   @media (max-width: 640px) {
     padding: 2rem 1.25rem 3rem;
+    border-radius: 0.75rem;
+    margin: 1rem auto;
   }
 
   > article {
@@ -108,7 +112,7 @@ const StyledWrapper = styled.div`
 `
 
 const StyledToc = styled.aside`
-  padding: 0.5rem 0 0.5rem 1.25rem;
+  padding: 0.4rem 0 0.4rem 0.75rem;
   border-left: 1px solid ${({ theme }) => theme.colors.gray5};
   background: transparent;
 
@@ -136,20 +140,20 @@ const StyledToc = styled.aside`
 
   a {
     display: block;
-    padding: 0.35rem 0.45rem;
+    padding: 0.3rem 0.35rem;
     border-radius: 0.5rem;
-    font-size: 0.875rem;
-    line-height: 1.35rem;
+    font-size: 0.82rem;
+    line-height: 1.25rem;
     color: ${({ theme }) => theme.colors.gray11};
     cursor: pointer;
 
     &[data-level="2"] {
-      padding-left: 1rem;
+      padding-left: 0.55rem;
     }
 
     &[data-level="3"] {
-      padding-left: 1.5rem;
-      font-size: 0.82rem;
+      padding-left: 0.85rem;
+      font-size: 0.78rem;
     }
 
     &:hover {

@@ -17,11 +17,6 @@ const PostCard: React.FC<Props> = ({ data }) => {
   return (
     <StyledWrapper href={`/${data.slug}`}>
       <article>
-        {category && (
-          <div className="category">
-            <Category>{category}</Category>
-          </div>
-        )}
         <div
           data-thumb={!!data.thumbnail}
           data-category={!!category}
@@ -38,6 +33,11 @@ const PostCard: React.FC<Props> = ({ data }) => {
             </div>
           )}
           <div data-thumb={!!data.thumbnail} className="wrapper">
+            {category && (
+              <div className="category">
+                <Category>{category}</Category>
+              </div>
+            )}
             <div className="tags">
               {data.tags &&
                 data.tags.map((tag: string, idx: number) => (
@@ -69,7 +69,7 @@ export default PostCard
 
 const StyledWrapper = styled(Link)`
   article {
-    overflow: hidden;
+    overflow: visible;
     position: relative;
     background-color: ${({ theme }) =>
       theme.scheme === "light" ? "#fff" : theme.colors.gray4};
@@ -100,20 +100,13 @@ const StyledWrapper = styled(Link)`
       animation: gradient-text 1.5s linear infinite;
     }
 
-    > .category {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      z-index: 10;
-    }
-
     > .content {
       padding: 1.2rem;
       display: flex;
       gap: 1.25rem;
 
       &[data-thumb="false"] {
-        padding-top: 3.25rem;
+        padding-top: 1.2rem;
       }
       &[data-category="false"] {
         padding-top: 1.25rem;
@@ -139,6 +132,9 @@ const StyledWrapper = styled(Link)`
         flex-direction: column;
         min-width: 0;
         flex: 1;
+        > .category {
+          margin-bottom: 0.7rem;
+        }
         &[data-thumb="false"] {
           padding-left: 0;
         }

@@ -285,6 +285,28 @@ const StyledWrapper = styled.div`
     font-weight: 500;
   }
 
+  .notion-toggle-heading > summary {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    color: ${({ theme }) => theme.colors.gray11};
+    font-weight: 600;
+  }
+
+  .notion-toggle-heading-1 > summary {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .notion-toggle-heading-2 > summary {
+    font-size: 1.25rem;
+    line-height: 1.85rem;
+  }
+
+  .notion-toggle-heading-3 > summary {
+    font-size: 1.05rem;
+    line-height: 1.65rem;
+  }
+
   .notion-toggle > summary::-webkit-details-marker {
     display: none;
   }

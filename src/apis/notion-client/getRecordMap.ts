@@ -153,6 +153,21 @@ const renderBlocksHtml = async (blocks: any[]) => {
   return htmlBlocks.filter(Boolean).join("")
 }
 
+const renderToggleHtml = async (
+  block: any,
+  text: string,
+  className = ""
+) => {
+  const anchor = getNotionBlockAnchor(block?.id)
+  const children = block?.has_children ? await listAllBlockChildren(block.id) : []
+  const childrenHtml = children.length ? await renderBlocksHtml(children) : ""
+  const classes = ["notion-toggle", className].filter(Boolean).join(" ")
+
+  return `<details class="${classes}"${
+    anchor ? ` id="${anchor}"` : ""
+  }><summary>${text || "&nbsp;"}</summary><div class="notion-toggle-content">${childrenHtml}</div></details>`
+}
+
 const renderBlockHtml = async (block: any): Promise<string> => {
   const type = block?.type
   const value = block?.[type]
@@ -177,14 +192,35 @@ const renderBlockHtml = async (block: any): Promise<string> => {
   }
 
   if (type === "heading_1") {
+    if (value.is_toggleable) {
+      return renderToggleHtml(
+        block,
+        renderRichText(value.rich_text),
+        "notion-toggle-heading notion-toggle-heading-1"
+      )
+    }
     return `<h1>${renderRichText(value.rich_text)}</h1>`
   }
 
   if (type === "heading_2") {
+    if (value.is_toggleable) {
+      return renderToggleHtml(
+        block,
+        renderRichText(value.rich_text),
+        "notion-toggle-heading notion-toggle-heading-2"
+      )
+    }
     return `<h2>${renderRichText(value.rich_text)}</h2>`
   }
 
   if (type === "heading_3") {
+    if (value.is_toggleable) {
+      return renderToggleHtml(
+        block,
+        renderRichText(value.rich_text),
+        "notion-toggle-heading notion-toggle-heading-3"
+      )
+    }
     return `<h3>${renderRichText(value.rich_text)}</h3>`
   }
 
@@ -198,17 +234,7 @@ const renderBlockHtml = async (block: any): Promise<string> => {
 
   if (type === "toggle") {
     const text = renderRichText(value.rich_text)
-    const anchor = getNotionBlockAnchor(block.id)
-    const children = block.has_children
-      ? await listAllBlockChildren(block.id)
-      : []
-    const childrenHtml = children.length ? await renderBlocksHtml(children) : ""
-
-    return `<details class="notion-toggle"${
-      anchor ? ` id="${anchor}"` : ""
-    }><summary>${
-      text || "&nbsp;"
-    }</summary><div class="notion-toggle-content">${childrenHtml}</div></details>`
+    return renderToggleHtml(block, text)
   }
 
   const markdown = await toMarkdownString([block])
@@ -420,19 +446,32 @@ n2m.setCustomTransformer("image", async (block: any) => {
 
 n2m.setCustomTransformer("toggle", async (block: any) => {
   const text = renderRichText(block?.toggle?.rich_text)
-  const anchor = getNotionBlockAnchor(block?.id)
-  const children = block?.has_children
-    ? await listAllBlockChildren(block.id)
-    : []
-  const childrenHtml = children.length ? await renderBlocksHtml(children) : ""
-
-  return `
-<details class="notion-toggle"${anchor ? ` id="${anchor}"` : ""}>
-  <summary>${text || "&nbsp;"}</summary>
-  <div class="notion-toggle-content">${childrenHtml}</div>
-</details>
-`.trim()
+  return renderToggleHtml(block, text)
 })
+
+const setToggleableHeadingTransformer = (
+  type: "heading_1" | "heading_2" | "heading_3",
+  tag: "h1" | "h2" | "h3"
+) => {
+  n2m.setCustomTransformer(type, async (block: any) => {
+    const value = block?.[type]
+    const text = renderRichText(value?.rich_text)
+
+    if (value?.is_toggleable) {
+      return renderToggleHtml(
+        block,
+        text,
+        `notion-toggle-heading notion-toggle-heading-${tag.slice(1)}`
+      )
+    }
+
+    return `<${tag}>${text}</${tag}>`
+  })
+}
+
+setToggleableHeadingTransformer("heading_1", "h1")
+setToggleableHeadingTransformer("heading_2", "h2")
+setToggleableHeadingTransformer("heading_3", "h3")
 
 n2m.setCustomTransformer("callout", async (block: any) => {
   const icon = block?.callout?.icon
