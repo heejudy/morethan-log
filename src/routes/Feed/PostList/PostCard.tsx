@@ -33,17 +33,6 @@ const PostCard: React.FC<Props> = ({ data }) => {
             </div>
           )}
           <div data-thumb={!!data.thumbnail} className="wrapper">
-            {category && (
-              <div className="category">
-                <Category>{category}</Category>
-              </div>
-            )}
-            <div className="tags">
-              {data.tags &&
-                data.tags.map((tag: string, idx: number) => (
-                  <Tag key={idx}>{`# ${tag}`}</Tag>
-                ))}
-            </div>
             <header className="top">
               <h2>{data.title}</h2>
             </header>
@@ -57,6 +46,20 @@ const PostCard: React.FC<Props> = ({ data }) => {
             </div>
             <div className="summary">
               <p>{data.summary}</p>
+            </div>
+            <div className="badges">
+              {category && (
+                <div className="category">
+                  <Category>{category}</Category>
+                </div>
+              )}
+              {data.tags && (
+                <div className="tags">
+                  {data.tags.map((tag: string, idx: number) => (
+                    <Tag key={idx}>{`# ${tag}`}</Tag>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -132,9 +135,6 @@ const StyledWrapper = styled(Link)`
         flex-direction: column;
         min-width: 0;
         flex: 1;
-        > .category {
-          margin-bottom: 0.7rem;
-        }
         &[data-thumb="false"] {
           padding-left: 0;
         }
@@ -188,11 +188,25 @@ const StyledWrapper = styled(Link)`
             }
           }
         }
-        > .tags {
+        > .badges {
           display: flex;
-          gap: 0.5rem;
+          justify-content: flex-end;
+          align-items: center;
+          gap: 0.45rem;
           flex-wrap: wrap;
-          margin-bottom: 0.35rem;
+          margin-top: auto;
+          padding-top: 1rem;
+
+          > .category,
+          > .tags {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+          }
+
+          > .tags {
+            justify-content: flex-end;
+          }
         }
       }
     }
