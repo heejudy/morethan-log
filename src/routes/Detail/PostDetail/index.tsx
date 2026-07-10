@@ -89,7 +89,7 @@ const StyledWrapper = styled.div`
       grid-template-columns: minmax(0, 42rem) 8rem;
       align-items: start;
       gap: 0.75rem;
-      max-width: 64rem;
+      max-width: 56rem;
     }
   }
 
