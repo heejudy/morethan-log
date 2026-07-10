@@ -192,11 +192,12 @@ export default NotionRenderer
 const StyledWrapper = styled.div`
   font-size: 1rem;
   line-height: 1.8;
+  font-weight: 400;
   color: ${({ theme }) => theme.colors.gray11};
 
-  h1,
-  h2,
-  h3 {
+  && h1,
+  && h2,
+  && h3 {
     scroll-margin-top: 5rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.gray11};
@@ -204,22 +205,27 @@ const StyledWrapper = styled.div`
   }
 
   h1 {
-    font-size: 1.65rem;
-    line-height: 2.35rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 
   h2 {
     font-size: 1.25rem;
-    line-height: 2rem;
+    line-height: 1.85rem;
   }
 
   h3 {
     font-size: 1.1rem;
-    line-height: 1.75rem;
+    line-height: 1.65rem;
   }
 
   p {
     margin: 0.75rem 0;
+  }
+
+  && strong,
+  && b {
+    font-weight: 500;
   }
 
   ul,
@@ -252,7 +258,7 @@ const StyledWrapper = styled.div`
   }
 
   .notion-callout-text {
-    font-weight: 500;
+    font-weight: 400;
     display: inline;
   }
 
@@ -284,7 +290,7 @@ const StyledWrapper = styled.div`
     padding-top: 0.85rem;
     padding-bottom: 0.85rem;
     color: ${({ theme }) => theme.colors.gray11};
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .notion-toggle-heading-1 > summary {
@@ -425,7 +431,7 @@ const StyledWrapper = styled.div`
       theme.scheme === "light" ? "#f7f7f5" : theme.colors.gray4};
   }
 
-  table th {
+  && table th {
     font-weight: 500;
   }
 

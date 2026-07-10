@@ -127,7 +127,7 @@ const StyledToc = styled.aside`
     margin-bottom: 0.75rem;
     font-size: 0.78rem;
     line-height: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     color: ${({ theme }) => theme.colors.gray11};
     text-transform: uppercase;
   }
@@ -144,6 +144,7 @@ const StyledToc = styled.aside`
     border-radius: 0.5rem;
     font-size: 0.82rem;
     line-height: 1.25rem;
+    font-weight: 400;
     color: ${({ theme }) => theme.colors.gray11};
     cursor: pointer;
     white-space: normal;

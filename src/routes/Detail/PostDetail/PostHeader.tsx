@@ -67,10 +67,16 @@ const PostHeader: React.FC<Props> = ({ data }) => {
 export default PostHeader
 
 const StyledWrapper = styled.div`
+  font-size: 1rem;
+  line-height: 1.8;
+  font-weight: 400;
+  color: ${({ theme }) => theme.colors.gray11};
+
   .title {
     font-size: 1.875rem;
-    line-height: 2.25rem;
+    line-height: 2.35rem;
     font-weight: 600;
+    color: ${({ theme }) => theme.colors.gray11};
   }
   nav {
     margin-top: 1.5rem;
@@ -84,6 +90,7 @@ const StyledWrapper = styled.div`
         display: flex;
         gap: 0.5rem;
         align-items: center;
+        font-weight: 400;
       }
       .hr {
         margin-top: 0.25rem;
@@ -94,6 +101,7 @@ const StyledWrapper = styled.div`
       }
       .date {
         margin-right: 0.5rem;
+        font-weight: 400;
 
         @media (min-width: 768px) {
           margin-left: 0;
