@@ -86,10 +86,10 @@ const StyledWrapper = styled.div`
 
   @media (min-width: 1180px) {
     &[data-has-toc="true"] {
-      grid-template-columns: minmax(0, 42rem) 8rem;
+      grid-template-columns: minmax(0, 46rem) 12rem;
       align-items: start;
       gap: 0.75rem;
-      max-width: 56rem;
+      max-width: 58.75rem;
     }
   }
 
@@ -102,7 +102,7 @@ const StyledWrapper = styled.div`
   > article {
     margin: 0 auto;
     width: 100%;
-    max-width: 42rem;
+    max-width: 46rem;
 
     @media (min-width: 1180px) {
       grid-column: 1;
@@ -146,6 +146,9 @@ const StyledToc = styled.aside`
     line-height: 1.25rem;
     color: ${({ theme }) => theme.colors.gray11};
     cursor: pointer;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 
     &[data-level="2"] {
       padding-left: 0.55rem;

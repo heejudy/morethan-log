@@ -353,6 +353,8 @@ const StyledWrapper = styled.div`
   }
 
   pre {
+    max-width: 100%;
+    box-sizing: border-box;
     background: ${({ theme }) =>
       theme.scheme === "light" ? "#f6f6f4" : "#111827"};
     color: ${({ theme }) =>
@@ -360,12 +362,15 @@ const StyledWrapper = styled.div`
     padding: 1rem;
     border-radius: 6px;
     overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 
   pre code {
     background: transparent;
     padding: 0;
     color: inherit;
+    white-space: inherit;
   }
 
   img {
