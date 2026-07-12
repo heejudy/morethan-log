@@ -575,7 +575,6 @@ n2m.setCustomTransformer("video", async (block: any) => {
 
 export const getPageContent = async (pageId: string): Promise<string> => {
   if (!pageId) return ""
-  const mdBlocks = await n2m.pageToMarkdown(pageId)
-  const markdown = n2m.toMarkdownString(mdBlocks)
-  return markdown.parent || ""
+  const blocks = await listAllBlockChildren(pageId)
+  return renderBlocksHtml(blocks)
 }

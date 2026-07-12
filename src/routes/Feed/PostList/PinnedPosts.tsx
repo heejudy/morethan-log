@@ -47,9 +47,6 @@ const StyledWrapper = styled.div`
     margin-bottom: 1rem;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid
-      ${({ theme }) =>
-        theme.scheme === "light" ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.08)"};
   }
   .header {
     display: flex;
