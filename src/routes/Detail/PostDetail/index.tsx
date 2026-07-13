@@ -160,6 +160,11 @@ const StyledToc = styled.aside`
       font-size: 0.78rem;
     }
 
+    &[data-level="4"] {
+      padding-left: 1.15rem;
+      font-size: 0.76rem;
+    }
+
     &:hover {
       color: ${({ theme }) => theme.colors.gray12};
       background: ${({ theme }) => theme.colors.gray3};

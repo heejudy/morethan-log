@@ -13,7 +13,7 @@ type Props = {
 export type TocItem = {
   id: string
   text: string
-  level: 1 | 2 | 3
+  level: 1 | 2 | 3 | 4
 }
 
 const stripHtml = (value: string) =>
@@ -50,7 +50,7 @@ export const createHeadingId = (text: string) => {
 }
 
 export const extractTableOfContents = (content: string): TocItem[] => {
-  const headings = [...content.matchAll(/<h([1-3])[^>]*>(.*?)<\/h\1>/gis)]
+  const headings = [...content.matchAll(/<h([1-4])[^>]*>(.*?)<\/h\1>/gis)]
   const counts = new Map<string, number>()
 
   return headings
@@ -111,7 +111,7 @@ const NotionRenderer: FC<Props> = ({ content }) => {
   headingCountsRef.current = new Map()
 
   const renderHeading = (
-    Tag: "h1" | "h2" | "h3",
+    Tag: "h1" | "h2" | "h3" | "h4",
     children: ReactNode,
     props: HTMLAttributes<HTMLHeadingElement>
   ) => {
@@ -142,6 +142,9 @@ const NotionRenderer: FC<Props> = ({ content }) => {
           },
           h3({ children, ...props }) {
             return renderHeading("h3", children, props)
+          },
+          h4({ children, ...props }) {
+            return renderHeading("h4", children, props)
           },
           a({ href, children, ...props }) {
             const internalHash = getNotionBlockHash(href)
@@ -197,7 +200,8 @@ const StyledWrapper = styled.div`
 
   && h1,
   && h2,
-  && h3 {
+  && h3,
+  && h4 {
     scroll-margin-top: 5rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.gray11};
@@ -217,6 +221,11 @@ const StyledWrapper = styled.div`
   h3 {
     font-size: 1.1rem;
     line-height: 1.65rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+    line-height: 1.55rem;
   }
 
   p {
