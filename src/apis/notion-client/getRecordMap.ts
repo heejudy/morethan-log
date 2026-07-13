@@ -110,6 +110,32 @@ const escapeHtml = (value: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;")
 
+const normalizeImageUrl = (value?: string | null) => {
+  if (!value) return ""
+
+  try {
+    const parsed = new URL(value)
+    const pathname = decodeURIComponent(parsed.pathname)
+
+    if (
+      (parsed.hostname === "www.notion.so" || parsed.hostname === "notion.so") &&
+      pathname.startsWith("/image/")
+    ) {
+      return pathname.replace(/^\/image\//, "")
+    }
+
+    return `${parsed.origin}${pathname}`
+  } catch {
+    return value.split("?")[0] || value
+  }
+}
+
+const isSameImageUrl = (a?: string | null, b?: string | null) => {
+  const left = normalizeImageUrl(a)
+  const right = normalizeImageUrl(b)
+  return Boolean(left && right && left === right)
+}
+
 const getNotionBlockAnchor = (value?: string) => {
   if (!value) return null
   const ids = value.replace(/-/g, "").match(/[0-9a-f]{32}/gi)
@@ -146,9 +172,13 @@ const renderCodeBlockHtml = (block: any) => {
   )}</code></pre>`
 }
 
-const renderBlocksHtml = async (blocks: any[]) => {
+type RenderOptions = {
+  excludedImageUrl?: string | null
+}
+
+const renderBlocksHtml = async (blocks: any[], options: RenderOptions = {}) => {
   const htmlBlocks = await Promise.all(
-    blocks.map((block) => renderBlockHtml(block))
+    blocks.map((block) => renderBlockHtml(block, options))
   )
   return htmlBlocks.filter(Boolean).join("")
 }
@@ -156,11 +186,14 @@ const renderBlocksHtml = async (blocks: any[]) => {
 const renderToggleHtml = async (
   block: any,
   text: string,
-  className = ""
+  className = "",
+  options: RenderOptions = {}
 ) => {
   const anchor = getNotionBlockAnchor(block?.id)
   const children = block?.has_children ? await listAllBlockChildren(block.id) : []
-  const childrenHtml = children.length ? await renderBlocksHtml(children) : ""
+  const childrenHtml = children.length
+    ? await renderBlocksHtml(children, options)
+    : ""
   const classes = ["notion-toggle", className].filter(Boolean).join(" ")
 
   return `<details class="${classes}"${
@@ -168,7 +201,10 @@ const renderToggleHtml = async (
   }><summary>${text || "&nbsp;"}</summary><div class="notion-toggle-content">${childrenHtml}</div></details>`
 }
 
-const renderBlockHtml = async (block: any): Promise<string> => {
+const renderBlockHtml = async (
+  block: any,
+  options: RenderOptions = {}
+): Promise<string> => {
   const type = block?.type
   const value = block?.[type]
 
@@ -196,7 +232,8 @@ const renderBlockHtml = async (block: any): Promise<string> => {
       return renderToggleHtml(
         block,
         renderRichText(value.rich_text),
-        "notion-toggle-heading notion-toggle-heading-1"
+        "notion-toggle-heading notion-toggle-heading-1",
+        options
       )
     }
     return `<h1>${renderRichText(value.rich_text)}</h1>`
@@ -207,7 +244,8 @@ const renderBlockHtml = async (block: any): Promise<string> => {
       return renderToggleHtml(
         block,
         renderRichText(value.rich_text),
-        "notion-toggle-heading notion-toggle-heading-2"
+        "notion-toggle-heading notion-toggle-heading-2",
+        options
       )
     }
     return `<h2>${renderRichText(value.rich_text)}</h2>`
@@ -218,7 +256,8 @@ const renderBlockHtml = async (block: any): Promise<string> => {
       return renderToggleHtml(
         block,
         renderRichText(value.rich_text),
-        "notion-toggle-heading notion-toggle-heading-3"
+        "notion-toggle-heading notion-toggle-heading-3",
+        options
       )
     }
     return `<h3>${renderRichText(value.rich_text)}</h3>`
@@ -234,7 +273,24 @@ const renderBlockHtml = async (block: any): Promise<string> => {
 
   if (type === "toggle") {
     const text = renderRichText(value.rich_text)
-    return renderToggleHtml(block, text)
+    return renderToggleHtml(block, text, "", options)
+  }
+
+  if (type === "image") {
+    return renderImageBlockHtml(block, options)
+  }
+
+  if (type === "callout") {
+    return renderCalloutBlockHtml(block, options)
+  }
+
+  if (type === "column_list") {
+    return renderColumnListBlockHtml(block, options)
+  }
+
+  if (type === "column") {
+    const children = await listAllBlockChildren(block.id)
+    return renderBlocksHtml(children, options)
   }
 
   const markdown = await toMarkdownString([block])
@@ -417,7 +473,10 @@ n2m.setCustomTransformer("bookmark", async (block: any) => {
   }<div class="notion-bookmark-url">${safeHostname}</div></div>${thumb}</a></div>`
 })
 
-n2m.setCustomTransformer("image", async (block: any) => {
+const renderImageBlockHtml = async (
+  block: any,
+  options: RenderOptions = {}
+) => {
   const image = block?.image
   if (!image) return ""
 
@@ -431,6 +490,11 @@ n2m.setCustomTransformer("image", async (block: any) => {
   const { width, caption } = parseImageCaption(captionText || "")
   const mappedUrl =
     image.type === "file" ? mapNotionImageUrl(url, block?.id) : url
+
+  if (isSameImageUrl(mappedUrl, options.excludedImageUrl)) {
+    return ""
+  }
+
   const safeUrl = escapeHtml(mappedUrl)
   const safeCaption = escapeHtml(caption)
   const safeAlt = safeCaption || ""
@@ -442,7 +506,9 @@ n2m.setCustomTransformer("image", async (block: any) => {
   ${safeCaption ? `<figcaption>${safeCaption}</figcaption>` : ""}
 </figure>
 `.trim()
-})
+}
+
+n2m.setCustomTransformer("image", renderImageBlockHtml)
 
 n2m.setCustomTransformer("toggle", async (block: any) => {
   const text = renderRichText(block?.toggle?.rich_text)
@@ -473,7 +539,10 @@ setToggleableHeadingTransformer("heading_1", "h1")
 setToggleableHeadingTransformer("heading_2", "h2")
 setToggleableHeadingTransformer("heading_3", "h3")
 
-n2m.setCustomTransformer("callout", async (block: any) => {
+const renderCalloutBlockHtml = async (
+  block: any,
+  options: RenderOptions = {}
+) => {
   const icon = block?.callout?.icon
   let iconHtml = ""
   if (icon?.type === "emoji") {
@@ -487,7 +556,7 @@ n2m.setCustomTransformer("callout", async (block: any) => {
     ? await listAllBlockChildren(block.id)
     : []
   const childrenMarkdown = children.length
-    ? await toMarkdownString(children)
+    ? await renderBlocksHtml(children, options)
     : ""
 
   const content = [
@@ -500,9 +569,12 @@ n2m.setCustomTransformer("callout", async (block: any) => {
     .join("\n\n")
 
   return toBlockquote(content)
-})
+}
 
-n2m.setCustomTransformer("column_list", async (block: any) => {
+const renderColumnListBlockHtml = async (
+  block: any,
+  options: RenderOptions = {}
+) => {
   const columns = (await listAllBlockChildren(block.id)).filter(
     (child) => child.type === "column"
   )
@@ -512,8 +584,7 @@ n2m.setCustomTransformer("column_list", async (block: any) => {
   const columnHtml = await Promise.all(
     columns.map(async (column) => {
       const children = await listAllBlockChildren(column.id)
-      const markdown = await toMarkdownString(children)
-      return marked.parse(markdown)
+      return renderBlocksHtml(children, options)
     })
   )
 
@@ -524,12 +595,14 @@ n2m.setCustomTransformer("column_list", async (block: any) => {
     .join("")}
 </div>
   `.trim()
-})
+}
+
+n2m.setCustomTransformer("callout", renderCalloutBlockHtml)
+n2m.setCustomTransformer("column_list", renderColumnListBlockHtml)
 
 n2m.setCustomTransformer("column", async (block: any) => {
   const children = await listAllBlockChildren(block.id)
-  const markdown = await toMarkdownString(children)
-  return markdown.trim()
+  return renderBlocksHtml(children)
 })
 
 n2m.setCustomTransformer("video", async (block: any) => {
@@ -573,8 +646,11 @@ n2m.setCustomTransformer("video", async (block: any) => {
   return `<figure class="notion-video"><video controls preload="metadata"><source src="${videoSrc}" /></video>${figcaption}</figure>`
 })
 
-export const getPageContent = async (pageId: string): Promise<string> => {
+export const getPageContent = async (
+  pageId: string,
+  excludedImageUrl?: string | null
+): Promise<string> => {
   if (!pageId) return ""
   const blocks = await listAllBlockChildren(pageId)
-  return renderBlocksHtml(blocks)
+  return renderBlocksHtml(blocks, { excludedImageUrl })
 }

@@ -46,7 +46,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return { notFound: true }
   }
 
-  const content = await getPageContent(postDetail.id)
+  const content = await getPageContent(postDetail.id, postDetail.thumbnail)
   await queryClient.prefetchQuery(queryKey.post(String(slug)), () => ({
     ...postDetail,
     content,
