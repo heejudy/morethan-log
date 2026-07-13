@@ -100,6 +100,43 @@ const renderRichText = (richText: any[] = []) => {
     .join("")
 }
 
+const getPlainText = (richText: any[] = []) =>
+  richText.map((item) => item?.plain_text || "").join("")
+
+const stripRichTextPrefix = (richText: any[] = [], prefixLength: number) => {
+  let remaining = prefixLength
+
+  return richText
+    .map((item) => {
+      const plainText = item?.plain_text || ""
+      if (!remaining) return item
+
+      if (plainText.length <= remaining) {
+        remaining -= plainText.length
+        return null
+      }
+
+      const start = remaining
+      remaining = 0
+      return {
+        ...item,
+        plain_text: plainText.slice(start),
+      }
+    })
+    .filter(Boolean)
+}
+
+const renderMarkdownHeadingParagraph = (richText: any[] = []) => {
+  const plainText = getPlainText(richText)
+  const headingMatch = plainText.match(/^( {0,3}#{4}\s*)(\S.*)$/)
+  if (!headingMatch) return null
+
+  const headingText = renderRichText(
+    stripRichTextPrefix(richText, headingMatch[1].length)
+  )
+  return headingText ? `<h4>${headingText}</h4>` : null
+}
+
 const toBlockquote = (text: string) => {
   const trimmed = text.trim()
   if (!trimmed) return ""
@@ -235,9 +272,10 @@ const renderBlockHtml = async (
   if (!type || !value) return ""
 
   if (type === "paragraph") {
-    const text = renderRichText(value.rich_text)
+    const markdownHeading = renderMarkdownHeadingParagraph(value.rich_text)
+    const text = markdownHeading || renderRichText(value.rich_text)
     const childrenHtml = await renderIndentedChildrenHtml(block, options)
-    return `${text ? `<p>${text}</p>` : ""}${childrenHtml}`
+    return `${text ? markdownHeading || `<p>${text}</p>` : ""}${childrenHtml}`
   }
 
   if (type === "code") {
