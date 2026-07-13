@@ -12,6 +12,9 @@ const escapeInlineHtml = (value: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;")
 
+const renderInlineMarkdown = (value: string) =>
+  String(marked.parseInline(value, { async: false }))
+
 ;(n2m as any).annotatePlainText = (
   text: string,
   annotations: {
@@ -33,11 +36,15 @@ const escapeInlineHtml = (value: string) =>
 
   if (content !== "") {
     content = escapeInlineHtml(content)
-    if (annotations.code) content = `<code>${content}</code>`
-    if (annotations.bold) content = `<strong>${content}</strong>`
-    if (annotations.italic) content = `<em>${content}</em>`
-    if (annotations.strikethrough) content = `<del>${content}</del>`
-    if (annotations.underline) content = `<u>${content}</u>`
+    if (annotations.code) {
+      content = `<code>${content}</code>`
+    } else {
+      content = renderInlineMarkdown(content)
+      if (annotations.bold) content = `<strong>${content}</strong>`
+      if (annotations.italic) content = `<em>${content}</em>`
+      if (annotations.strikethrough) content = `<del>${content}</del>`
+      if (annotations.underline) content = `<u>${content}</u>`
+    }
 
     const color =
       annotations.color && annotations.color !== "default"
@@ -83,7 +90,7 @@ const renderRichText = (richText: any[] = []) => {
       if (item?.href) {
         const internalHref = mapInternalNotionHref(item.href)
         const href = internalHref || item.href
-        const externalAttrs = internalHref
+        const externalAttrs = internalHref || isInternalSiteHref(href)
           ? ""
           : ` target="_blank" rel="noopener noreferrer"`
         return `<a href="${escapeHtml(href)}"${externalAttrs}>${text}</a>`
@@ -159,6 +166,9 @@ const mapInternalNotionHref = (href?: string) => {
   }
 }
 
+const isInternalSiteHref = (href?: string) =>
+  Boolean(href && (href.startsWith("/") || href.startsWith("#")) && !href.startsWith("//"))
+
 const renderCodeBlockHtml = (block: any) => {
   const language = block?.code?.language || "plaintext"
   const text = block?.code?.rich_text
@@ -181,6 +191,20 @@ const renderBlocksHtml = async (blocks: any[], options: RenderOptions = {}) => {
     blocks.map((block) => renderBlockHtml(block, options))
   )
   return htmlBlocks.filter(Boolean).join("")
+}
+
+const renderIndentedChildrenHtml = async (
+  block: any,
+  options: RenderOptions = {}
+) => {
+  if (!block?.has_children) return ""
+
+  const children = await listAllBlockChildren(block.id)
+  const childrenHtml = children.length
+    ? await renderBlocksHtml(children, options)
+    : ""
+
+  return childrenHtml ? `<div class="notion-indent">${childrenHtml}</div>` : ""
 }
 
 const renderToggleHtml = async (
@@ -212,7 +236,8 @@ const renderBlockHtml = async (
 
   if (type === "paragraph") {
     const text = renderRichText(value.rich_text)
-    return text ? `<p>${text}</p>` : ""
+    const childrenHtml = await renderIndentedChildrenHtml(block, options)
+    return `${text ? `<p>${text}</p>` : ""}${childrenHtml}`
   }
 
   if (type === "code") {
@@ -220,11 +245,13 @@ const renderBlockHtml = async (
   }
 
   if (type === "bulleted_list_item") {
-    return `<ul><li>${renderRichText(value.rich_text)}</li></ul>`
+    const childrenHtml = await renderIndentedChildrenHtml(block, options)
+    return `<ul><li>${renderRichText(value.rich_text)}${childrenHtml}</li></ul>`
   }
 
   if (type === "numbered_list_item") {
-    return `<ol><li>${renderRichText(value.rich_text)}</li></ol>`
+    const childrenHtml = await renderIndentedChildrenHtml(block, options)
+    return `<ol><li>${renderRichText(value.rich_text)}${childrenHtml}</li></ol>`
   }
 
   if (type === "heading_1") {
@@ -264,7 +291,8 @@ const renderBlockHtml = async (
   }
 
   if (type === "quote") {
-    return `<blockquote>${renderRichText(value.rich_text)}</blockquote>`
+    const childrenHtml = await renderIndentedChildrenHtml(block, options)
+    return `<blockquote>${renderRichText(value.rich_text)}${childrenHtml}</blockquote>`
   }
 
   if (type === "divider") {
@@ -294,7 +322,8 @@ const renderBlockHtml = async (
   }
 
   const markdown = await toMarkdownString([block])
-  return markdown ? String(marked.parse(markdown)) : ""
+  const childrenHtml = await renderIndentedChildrenHtml(block, options)
+  return `${markdown ? String(marked.parse(markdown)) : ""}${childrenHtml}`
 }
 
 const parseImageCaption = (caption: string) => {

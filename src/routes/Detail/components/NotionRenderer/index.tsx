@@ -221,6 +221,13 @@ const StyledWrapper = styled.div`
 
   p {
     margin: 0.75rem 0;
+    white-space: pre-wrap;
+  }
+
+  li,
+  blockquote,
+  .notion-toggle > summary {
+    white-space: pre-wrap;
   }
 
   && strong,
@@ -231,6 +238,23 @@ const StyledWrapper = styled.div`
   ul,
   ol {
     margin: 0.75rem 0 0.75rem 1.25rem;
+  }
+
+  .notion-indent {
+    margin: 0.35rem 0 0.35rem 1.5rem;
+  }
+
+  li > .notion-indent {
+    margin-top: 0.45rem;
+    margin-left: 1rem;
+  }
+
+  .notion-indent > :first-child {
+    margin-top: 0;
+  }
+
+  .notion-indent > :last-child {
+    margin-bottom: 0;
   }
 
   blockquote {
