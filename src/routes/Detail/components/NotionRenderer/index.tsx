@@ -224,8 +224,9 @@ const StyledWrapper = styled.div`
   }
 
   h4 {
-    font-size: 1rem;
-    line-height: 1.55rem;
+    font-size: 1.08rem;
+    line-height: 1.6rem;
+    font-weight: 600;
   }
 
   p {
@@ -247,6 +248,18 @@ const StyledWrapper = styled.div`
   ul,
   ol {
     margin: 0.75rem 0 0.75rem 1.25rem;
+  }
+
+  ol.notion-numbered-heading {
+    margin: 2rem 0 0.8rem 0;
+    padding-left: 0;
+    list-style-position: inside;
+  }
+
+  ol.notion-numbered-heading > li {
+    font-size: 1.08rem;
+    line-height: 1.6rem;
+    font-weight: 600;
   }
 
   .notion-indent {

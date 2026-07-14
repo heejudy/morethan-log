@@ -6,9 +6,8 @@ import CustomError from "../routes/Error"
 import { getPageContent, getPosts } from "../apis"
 import MetaConfig from "../components/MetaConfig"
 import { GetStaticProps } from "next"
-import { queryClient } from "../libs/react-query"
 import { queryKey } from "../constants/queryKey"
-import { dehydrate } from "@tanstack/react-query"
+import { QueryClient, dehydrate } from "@tanstack/react-query"
 import usePostQuery from "../hooks/usePostQuery"
 import { FilterPostsOptions } from "../libs/utils/notion/filterPosts"
 
@@ -30,6 +29,7 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
+  const queryClient = new QueryClient()
   const slug = Array.isArray(context.params?.slug)
     ? context.params?.slug[0]
     : context.params?.slug

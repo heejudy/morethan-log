@@ -3,13 +3,13 @@ import { CONFIG } from "../../site.config"
 import { NextPageWithLayout } from "../types"
 import { getPosts } from "../apis"
 import MetaConfig from "../components/MetaConfig"
-import { queryClient } from "../libs/react-query"
 import { queryKey } from "../constants/queryKey"
 import { GetStaticProps } from "next"
-import { dehydrate } from "@tanstack/react-query"
+import { QueryClient, dehydrate } from "@tanstack/react-query"
 import { filterPosts } from "../libs/utils/notion"
 
 export const getStaticProps: GetStaticProps = async () => {
+  const queryClient = new QueryClient()
   const posts = filterPosts(await getPosts())
   await queryClient.prefetchQuery(queryKey.posts(), () => posts)
 
