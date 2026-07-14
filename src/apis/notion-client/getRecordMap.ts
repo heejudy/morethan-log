@@ -100,6 +100,14 @@ const renderRichText = (richText: any[] = []) => {
     .join("")
 }
 
+const getColorClassName = (color?: string) =>
+  color && color !== "default" ? `notion-color-${color}` : ""
+
+const getClassAttribute = (...classNames: string[]) => {
+  const className = classNames.filter(Boolean).join(" ")
+  return className ? ` class="${escapeHtml(className)}"` : ""
+}
+
 const getPlainText = (richText: any[] = []) =>
   richText.map((item) => item?.plain_text || "").join("")
 
@@ -126,7 +134,10 @@ const stripRichTextPrefix = (richText: any[] = [], prefixLength: number) => {
     .filter(Boolean)
 }
 
-const renderMarkdownHeadingParagraph = (richText: any[] = []) => {
+const renderMarkdownHeadingParagraph = (
+  richText: any[] = [],
+  className = ""
+) => {
   const plainText = getPlainText(richText)
   const headingMatch = plainText.match(/^( {0,3}#{4}\s*)(\S.*)$/)
   if (!headingMatch) return null
@@ -134,7 +145,9 @@ const renderMarkdownHeadingParagraph = (richText: any[] = []) => {
   const headingText = renderRichText(
     stripRichTextPrefix(richText, headingMatch[1].length)
   )
-  return headingText ? `<h4>${headingText}</h4>` : null
+  return headingText
+    ? `<h4${getClassAttribute(className)}>${headingText}</h4>`
+    : null
 }
 
 const toBlockquote = (text: string) => {
@@ -283,8 +296,11 @@ const renderListItemHtml = async (
   const value = block?.[type]
   if (!value) return ""
 
+  const className = getColorClassName(value.color)
   const childrenHtml = await renderIndentedChildrenHtml(block, options)
-  return `<li>${renderRichText(value.rich_text)}${childrenHtml}</li>`
+  return `<li${getClassAttribute(className)}>${renderRichText(
+    value.rich_text
+  )}${childrenHtml}</li>`
 }
 
 const renderIndentedChildrenHtml = async (
@@ -328,11 +344,21 @@ const renderBlockHtml = async (
 
   if (!type || !value) return ""
 
+  const colorClassName = getColorClassName(value.color)
+
   if (type === "paragraph") {
-    const markdownHeading = renderMarkdownHeadingParagraph(value.rich_text)
+    const markdownHeading = renderMarkdownHeadingParagraph(
+      value.rich_text,
+      colorClassName
+    )
     const text = markdownHeading || renderRichText(value.rich_text)
     const childrenHtml = await renderIndentedChildrenHtml(block, options)
-    return `${text ? markdownHeading || `<p>${text}</p>` : ""}${childrenHtml}`
+    return `${
+      text
+        ? markdownHeading ||
+          `<p${getClassAttribute(colorClassName)}>${text}</p>`
+        : ""
+    }${childrenHtml}`
   }
 
   if (type === "code") {
@@ -340,17 +366,27 @@ const renderBlockHtml = async (
   }
 
   if (type === "bulleted_list_item") {
-    const markdownHeading = renderMarkdownHeadingParagraph(value.rich_text)
+    const markdownHeading = renderMarkdownHeadingParagraph(
+      value.rich_text,
+      colorClassName
+    )
     const childrenHtml = await renderIndentedChildrenHtml(block, options)
     if (markdownHeading) return `${markdownHeading}${childrenHtml}`
-    return `<ul><li>${renderRichText(value.rich_text)}${childrenHtml}</li></ul>`
+    return `<ul><li${getClassAttribute(colorClassName)}>${renderRichText(
+      value.rich_text
+    )}${childrenHtml}</li></ul>`
   }
 
   if (type === "numbered_list_item") {
-    const markdownHeading = renderMarkdownHeadingParagraph(value.rich_text)
+    const markdownHeading = renderMarkdownHeadingParagraph(
+      value.rich_text,
+      colorClassName
+    )
     const childrenHtml = await renderIndentedChildrenHtml(block, options)
     if (markdownHeading) return `${markdownHeading}${childrenHtml}`
-    return `<ol><li>${renderRichText(value.rich_text)}${childrenHtml}</li></ol>`
+    return `<ol><li${getClassAttribute(colorClassName)}>${renderRichText(
+      value.rich_text
+    )}${childrenHtml}</li></ol>`
   }
 
   if (type === "heading_1") {
@@ -362,7 +398,9 @@ const renderBlockHtml = async (
         options
       )
     }
-    return `<h1>${renderRichText(value.rich_text)}</h1>`
+    return `<h1${getClassAttribute(colorClassName)}>${renderRichText(
+      value.rich_text
+    )}</h1>`
   }
 
   if (type === "heading_2") {
@@ -374,7 +412,9 @@ const renderBlockHtml = async (
         options
       )
     }
-    return `<h2>${renderRichText(value.rich_text)}</h2>`
+    return `<h2${getClassAttribute(colorClassName)}>${renderRichText(
+      value.rich_text
+    )}</h2>`
   }
 
   if (type === "heading_3") {
@@ -386,12 +426,16 @@ const renderBlockHtml = async (
         options
       )
     }
-    return `<h3>${renderRichText(value.rich_text)}</h3>`
+    return `<h3${getClassAttribute(colorClassName)}>${renderRichText(
+      value.rich_text
+    )}</h3>`
   }
 
   if (type === "quote") {
     const childrenHtml = await renderIndentedChildrenHtml(block, options)
-    return `<blockquote>${renderRichText(value.rich_text)}${childrenHtml}</blockquote>`
+    return `<blockquote${getClassAttribute(colorClassName)}>${renderRichText(
+      value.rich_text
+    )}${childrenHtml}</blockquote>`
   }
 
   if (type === "divider") {

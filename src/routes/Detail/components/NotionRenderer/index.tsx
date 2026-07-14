@@ -677,68 +677,73 @@ const StyledWrapper = styled.div`
     color: ${({ theme }) => theme.colors.gray10};
   }
 
-  .notion-color-gray {
+  && .notion-color-gray {
     color: #858585;
   }
-  .notion-color-brown {
+  && .notion-color-brown {
     color: #9e7740;
   }
-  .notion-color-orange {
+  && .notion-color-orange {
     color: #ff842d;
   }
-  .notion-color-yellow {
+  && .notion-color-yellow {
     color: #ca8a04;
   }
-  .notion-color-green {
+  && .notion-color-green {
     color: #48ba72;
   }
-  .notion-color-blue {
+  && .notion-color-blue {
     color: #3f8cdf;
   }
-  .notion-color-purple {
+  && .notion-color-purple {
     color: #a646cc;
   }
-  .notion-color-pink {
+  && .notion-color-pink {
     color: #ff509e;
   }
-  .notion-color-red {
+  && .notion-color-red {
     color: #dc2626;
   }
 
-  .notion-color-gray_background {
+  && .notion-color-gray_background {
     background: rgba(133, 133, 133, 0.18);
     color: #858585;
   }
-  .notion-color-brown_background {
+  && .notion-color-brown_background {
     background: rgba(158, 119, 64, 0.18);
     color: #9e7740;
   }
-  .notion-color-orange_background {
+  && .notion-color-orange_background {
     background: rgba(255, 132, 45, 0.18);
     color: #ff842d;
   }
-  .notion-color-yellow_background {
+  && .notion-color-yellow_background {
     background: rgba(239, 194, 0, 0.2);
     color: #eec200;
   }
-  .notion-color-green_background {
+  && .notion-color-green_background {
     background: rgba(22, 163, 74, 0.18);
     color: #48ba72;
   }
-  .notion-color-blue_background {
+  && .notion-color-blue_background {
     background: rgba(63, 140, 223, 0.18);
     color: #3f8cdf;
   }
-  .notion-color-purple_background {
+  && .notion-color-purple_background {
     background: rgba(166, 70, 204, 0.18);
     color: #a646cc;
   }
-  .notion-color-pink_background {
+  && .notion-color-pink_background {
     background: rgba(255, 80, 158, 0.18);
     color: #ff509e;
   }
-  .notion-color-red_background {
+  && .notion-color-red_background {
     background: rgba(221, 33, 33, 0.18);
     color: #dd2121;
+  }
+
+  && [class*="notion-color-"][class*="_background"] {
+    border-radius: 4px;
+    padding: 0.08rem 0.28rem;
   }
 `
