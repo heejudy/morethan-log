@@ -119,7 +119,7 @@ const getCover = (page: PageObjectResponse): string | undefined => {
 
 const mapPageToPost = (page: PageObjectResponse): TPost => {
   const title = getPlainText(page, ["Title", "Name", "title"])
-  const slug = getPlainText(page, ["Slug", "slug"]) || page.id  
+  const slug = getPlainText(page, ["Slug", "slug"]) || page.id
   const summary = getPlainText(page, ["Summary", "summary", "Description"])
   const date = getDate(page, ["Date", "date"])
   const type = toPostTypes(getMultiSelect(page, ["Type", "type"]))
@@ -137,10 +137,10 @@ const mapPageToPost = (page: PageObjectResponse): TPost => {
     date: date || { start_date: page.created_time },
     type,
     slug,
-    tags,
-    category,
+    tags: tags ?? [],
+    category: category ?? [],
     summary: summary || null,
-    author,
+    author: author ?? [],
     title,
     status,
     createdTime: new Date(page.created_time).toString(),

@@ -146,6 +146,12 @@ const toBlockquote = (text: string) => {
 const escapeTableCell = (value: string) =>
   value.replace(/\|/g, "\\|").replace(/\n+/g, "<br />")
 
+const getCaptionText = (caption: any[] = []) =>
+  caption
+    .map((item: any) => item.plain_text || "")
+    .join("")
+    .trim()
+
 const escapeHtml = (value: string) =>
   value
     .replace(/&/g, "&amp;")
@@ -171,6 +177,19 @@ const normalizeImageUrl = (value?: string | null) => {
     return `${parsed.origin}${pathname}`
   } catch {
     return value.split("?")[0] || value
+  }
+}
+
+const getFileNameFromUrl = (url: string) => {
+  try {
+    const parsed = new URL(url)
+    const pathname = decodeURIComponent(parsed.pathname)
+    const fileName = pathname.split("/").filter(Boolean).pop()
+    return fileName || url
+  } catch {
+    const cleanUrl = url.split("?")[0] || url
+    const fileName = decodeURIComponent(cleanUrl.split("/").filter(Boolean).pop() || "")
+    return fileName || cleanUrl
   }
 }
 
@@ -344,6 +363,10 @@ const renderBlockHtml = async (
 
   if (type === "image") {
     return renderImageBlockHtml(block, options)
+  }
+
+  if (type === "file" || type === "pdf") {
+    return renderFileBlockHtml(block)
   }
 
   if (type === "callout") {
@@ -576,6 +599,26 @@ const renderImageBlockHtml = async (
 }
 
 n2m.setCustomTransformer("image", renderImageBlockHtml)
+
+const renderFileBlockHtml = async (block: any) => {
+  const type = block?.type
+  const file = block?.[type]
+  if (!file) return ""
+
+  const url = file.type === "external" ? file.external?.url : file.file?.url
+  if (!url) return ""
+
+  const caption = getCaptionText(file.caption)
+  const title = caption || file.name || getFileNameFromUrl(url)
+  const safeTitle = escapeHtml(title)
+  const safeUrl = escapeHtml(url)
+  const label = type === "pdf" ? "PDF" : "File"
+
+  return `<div class="notion-file"><a href="${safeUrl}" target="_blank" rel="noopener noreferrer"><span class="notion-file-label">${label}</span><span class="notion-file-title">${safeTitle}</span></a></div>`
+}
+
+n2m.setCustomTransformer("file", renderFileBlockHtml)
+n2m.setCustomTransformer("pdf", renderFileBlockHtml)
 
 n2m.setCustomTransformer("toggle", async (block: any) => {
   const text = renderRichText(block?.toggle?.rich_text)

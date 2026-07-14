@@ -433,8 +433,77 @@ const StyledWrapper = styled.div`
   }
 
   a {
-    color: #3b82f6;
-    text-decoration: underline;
+    color: ${({ theme }) => theme.colors.gray12};
+    text-decoration: none;
+    border-bottom: 1px solid
+      ${({ theme }) =>
+        theme.scheme === "light"
+          ? "rgba(236, 72, 153, 0.38)"
+          : "rgba(34, 211, 238, 0.48)"};
+    background: ${({ theme }) =>
+      theme.scheme === "light"
+        ? "linear-gradient(transparent 62%, rgba(236, 72, 153, 0.14) 62%)"
+        : "linear-gradient(transparent 62%, rgba(34, 211, 238, 0.14) 62%)"};
+    border-radius: 0.2rem;
+    padding: 0 0.06em;
+    transition:
+      background 120ms ease,
+      border-color 120ms ease;
+  }
+
+  a:hover {
+    border-bottom-color: ${({ theme }) =>
+      theme.scheme === "light"
+        ? "rgba(236, 72, 153, 0.72)"
+        : "rgba(34, 211, 238, 0.76)"};
+    background: ${({ theme }) =>
+      theme.scheme === "light"
+        ? "linear-gradient(transparent 45%, rgba(236, 72, 153, 0.22) 45%)"
+        : "linear-gradient(transparent 45%, rgba(34, 211, 238, 0.22) 45%)"};
+  }
+
+  .notion-file {
+    margin: 0.9rem 0;
+  }
+
+  .notion-file > a {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    gap: 0.45rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.55rem;
+    background: ${({ theme }) =>
+      theme.scheme === "light" ? theme.colors.gray3 : theme.colors.gray4};
+    border-bottom: none;
+    color: ${({ theme }) => theme.colors.gray11};
+    text-decoration: none;
+    vertical-align: top;
+  }
+
+  .notion-file > a:hover {
+    background: ${({ theme }) =>
+      theme.scheme === "light" ? theme.colors.gray4 : theme.colors.gray5};
+  }
+
+  .notion-file-label {
+    flex: 0 0 auto;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.4rem;
+    background: ${({ theme }) =>
+      theme.scheme === "light" ? "#fee2e2" : "rgba(248, 113, 113, 0.18)"};
+    color: ${({ theme }) =>
+      theme.scheme === "light" ? "#b91c1c" : "#fca5a5"};
+    font-size: 0.75rem;
+    line-height: 1.1rem;
+    font-weight: 600;
+  }
+
+  .notion-file-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   table {
@@ -512,6 +581,10 @@ const StyledWrapper = styled.div`
   .notion-bookmark > a {
     display: flex;
     gap: 1rem;
+    padding: 0;
+    border-bottom: none;
+    border-radius: 0;
+    background: none;
     text-decoration: none;
     color: inherit;
   }
