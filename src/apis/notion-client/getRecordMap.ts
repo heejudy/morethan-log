@@ -241,18 +241,50 @@ const isInternalSiteHref = (href?: string) =>
 const normalizeCodeLanguage = (language?: string) => {
   const normalized = (language || "plaintext").toLowerCase().replace(/\s+/g, "-")
   if (["plain", "plain-text", "text"].includes(normalized)) return "plaintext"
-  return normalized
+  const aliases: Record<string, string> = {
+    "c++": "cpp",
+    "c#": "csharp",
+    "f#": "fsharp",
+    "java/c/c++/c#": "java",
+    "javascript": "javascript",
+    "typescript": "typescript",
+    "shell": "bash",
+    "shell-script": "bash",
+    "bash": "bash",
+    "json": "json",
+    "html": "xml",
+    "xml": "xml",
+    "css": "css",
+    "scss": "scss",
+    "python": "python",
+    "java": "java",
+    "sql": "sql",
+    "markdown": "markdown",
+    "yaml": "yaml",
+    "yml": "yaml",
+  }
+  return aliases[normalized] || normalized
 }
 
+const looksLikeSql = (text: string) =>
+  /\b(create|alter|drop|truncate|delete|insert|update|select)\b[\s\S]*\b(table|from|into|set|where|join|primary\s+key|foreign\s+key|varchar|bigint)\b/i.test(
+    text
+  )
+
 const renderCodeBlockHtml = (block: any) => {
-  const language = normalizeCodeLanguage(block?.code?.language)
   const text = block?.code?.rich_text
     ?.map((item: any) => item.plain_text || "")
     .join("")
     .replace(/^```[a-z0-9_-]*\n?/i, "")
     .replace(/\n?```$/i, "")
+  const normalizedLanguage = normalizeCodeLanguage(block?.code?.language)
+  const language =
+    normalizedLanguage === "plaintext" && looksLikeSql(text || "")
+      ? "sql"
+      : normalizedLanguage
+  const languageClass = language === "plaintext" ? "" : `language-${language}`
 
-  return `<pre><code class="language-${escapeHtml(language)}">${escapeHtml(
+  return `<pre><code${getClassAttribute(languageClass)}>${escapeHtml(
     text || ""
   )}</code></pre>`
 }

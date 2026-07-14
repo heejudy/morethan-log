@@ -412,6 +412,7 @@ const StyledWrapper = styled.div`
     background: transparent;
     font-size: 0.85rem;
     padding: 0;
+    color: #e2e8f0;
     white-space: inherit;
   }
 
