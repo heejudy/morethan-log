@@ -248,21 +248,43 @@ type RenderOptions = {
   excludedImageUrl?: string | null
 }
 
-type RenderContext = {
-  prevType?: string
-  nextType?: string
+const renderBlocksHtml = async (blocks: any[], options: RenderOptions = {}) => {
+  const htmlBlocks: string[] = []
+
+  for (let index = 0; index < blocks.length; index += 1) {
+    const block = blocks[index]
+    const type = block?.type
+
+    if (type === "bulleted_list_item" || type === "numbered_list_item") {
+      const listType = type === "bulleted_list_item" ? "ul" : "ol"
+      const items: string[] = []
+
+      while (blocks[index]?.type === type) {
+        items.push(await renderListItemHtml(blocks[index], options))
+        index += 1
+      }
+
+      index -= 1
+      htmlBlocks.push(`<${listType}>${items.join("")}</${listType}>`)
+      continue
+    }
+
+    htmlBlocks.push(await renderBlockHtml(block, options))
+  }
+
+  return htmlBlocks.filter(Boolean).join("")
 }
 
-const renderBlocksHtml = async (blocks: any[], options: RenderOptions = {}) => {
-  const htmlBlocks = await Promise.all(
-    blocks.map((block, index) =>
-      renderBlockHtml(block, options, {
-        prevType: blocks[index - 1]?.type,
-        nextType: blocks[index + 1]?.type,
-      })
-    )
-  )
-  return htmlBlocks.filter(Boolean).join("")
+const renderListItemHtml = async (
+  block: any,
+  options: RenderOptions = {}
+) => {
+  const type = block?.type
+  const value = block?.[type]
+  if (!value) return ""
+
+  const childrenHtml = await renderIndentedChildrenHtml(block, options)
+  return `<li>${renderRichText(value.rich_text)}${childrenHtml}</li>`
 }
 
 const renderIndentedChildrenHtml = async (
@@ -299,8 +321,7 @@ const renderToggleHtml = async (
 
 const renderBlockHtml = async (
   block: any,
-  options: RenderOptions = {},
-  context: RenderContext = {}
+  options: RenderOptions = {}
 ): Promise<string> => {
   const type = block?.type
   const value = block?.[type]
@@ -329,14 +350,6 @@ const renderBlockHtml = async (
     const markdownHeading = renderMarkdownHeadingParagraph(value.rich_text)
     const childrenHtml = await renderIndentedChildrenHtml(block, options)
     if (markdownHeading) return `${markdownHeading}${childrenHtml}`
-    const isStandaloneNumberedItem =
-      context.prevType !== "numbered_list_item" &&
-      context.nextType !== "numbered_list_item"
-    if (isStandaloneNumberedItem) {
-      return `<ol class="notion-numbered-heading"><li>${renderRichText(
-        value.rich_text
-      )}</li></ol>${childrenHtml}`
-    }
     return `<ol><li>${renderRichText(value.rich_text)}${childrenHtml}</li></ol>`
   }
 

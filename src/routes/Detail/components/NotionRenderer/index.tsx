@@ -247,28 +247,24 @@ const StyledWrapper = styled.div`
 
   ul,
   ol {
-    margin: 0.75rem 0 0.75rem 1.25rem;
+    margin: 0.75rem 0;
+    padding-left: 1.35rem;
   }
 
-  ol.notion-numbered-heading {
-    margin: 2rem 0 0.8rem 0;
-    padding-left: 0;
-    list-style-position: inside;
-  }
-
-  ol.notion-numbered-heading > li {
-    font-size: 1.08rem;
-    line-height: 1.6rem;
-    font-weight: 600;
+  li > ul,
+  li > ol,
+  .notion-indent > ul,
+  .notion-indent > ol {
+    margin: 0.45rem 0 0.45rem;
   }
 
   .notion-indent {
-    margin: 0.35rem 0 0.35rem 1.5rem;
+    margin: 0.35rem 0 0.35rem 0.9rem;
   }
 
   li > .notion-indent {
     margin-top: 0.45rem;
-    margin-left: 1rem;
+    margin-left: 0.15rem;
   }
 
   .notion-indent > :first-child {
