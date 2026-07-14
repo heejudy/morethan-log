@@ -151,17 +151,22 @@ const StyledToc = styled.aside`
     word-break: keep-all;
     overflow-wrap: break-word;
 
+    &[data-level="1"] {
+      padding-left: 0.35rem;
+      font-weight: 500;
+    }
+
     &[data-level="2"] {
-      padding-left: 0.55rem;
+      padding-left: 0.9rem;
     }
 
     &[data-level="3"] {
-      padding-left: 0.85rem;
+      padding-left: 1.45rem;
       font-size: 0.78rem;
     }
 
     &[data-level="4"] {
-      padding-left: 1.15rem;
+      padding-left: 2rem;
       font-size: 0.76rem;
     }
 
