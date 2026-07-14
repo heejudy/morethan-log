@@ -4,7 +4,6 @@ import remarkGfm from "remark-gfm"
 import { FC, HTMLAttributes, ReactNode, useEffect, useRef } from "react"
 import styled from "@emotion/styled"
 import hljs from "highlight.js"
-import "highlight.js/styles/github-dark.css"
 
 type Props = {
   content: string
@@ -88,6 +87,25 @@ const getNotionBlockHash = (href?: string) => {
   }
 }
 
+const highlightCodeBlock = (element: HTMLElement) => {
+  if (element.dataset.highlighted === "yes") return
+  if (element.classList.contains("language-mermaid")) return
+
+  const hasLanguageClass = [...element.classList].some((className) =>
+    className.startsWith("language-")
+  )
+
+  if (hasLanguageClass) {
+    hljs.highlightElement(element)
+    return
+  }
+
+  const highlighted = hljs.highlightAuto(element.textContent || "")
+  element.innerHTML = highlighted.value
+  element.classList.add("hljs")
+  element.dataset.highlighted = "yes"
+}
+
 const NotionRenderer: FC<Props> = ({ content }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const headingCountsRef = useRef(new Map<string, number>())
@@ -97,9 +115,7 @@ const NotionRenderer: FC<Props> = ({ content }) => {
     const codeBlocks = containerRef.current.querySelectorAll("pre code")
     const raf = requestAnimationFrame(() => {
       codeBlocks.forEach((block) => {
-        const element = block as HTMLElement
-        if (element.dataset.highlighted === "yes") return
-        hljs.highlightElement(element)
+        highlightCodeBlock(block as HTMLElement)
       })
     })
 
@@ -175,7 +191,6 @@ const NotionRenderer: FC<Props> = ({ content }) => {
             )
           },
           code({ className, children, node: _node, ...props }) {
-            const isCodeBlock = className?.includes("language-")
             return (
               <code className={className} {...props}>
                 {children}
@@ -419,30 +434,42 @@ const StyledWrapper = styled.div`
   && pre code.hljs {
     background: transparent;
     color: #e2e8f0;
+    padding: 0;
+    overflow-x: visible;
+  }
+
+  && .hljs {
+    background: transparent;
+    color: #e2e8f0;
   }
 
   && .hljs-keyword,
   && .hljs-selector-tag,
-  && .hljs-built_in {
+  && .hljs-built_in,
+  && .hljs-type,
+  && .hljs-name {
     color: #c084fc;
   }
 
   && .hljs-string,
   && .hljs-regexp,
-  && .hljs-template-variable {
+  && .hljs-template-variable,
+  && .hljs-addition {
     color: #86efac;
   }
 
   && .hljs-number,
   && .hljs-literal,
   && .hljs-symbol,
-  && .hljs-bullet {
+  && .hljs-bullet,
+  && .hljs-selector-id {
     color: #facc15;
   }
 
   && .hljs-title,
   && .hljs-section,
-  && .hljs-function .hljs-title {
+  && .hljs-function .hljs-title,
+  && .hljs-selector-class {
     color: #93c5fd;
   }
 
@@ -450,7 +477,9 @@ const StyledWrapper = styled.div`
   && .hljs-attribute,
   && .hljs-property,
   && .hljs-variable,
-  && .hljs-params {
+  && .hljs-params,
+  && .hljs-meta,
+  && .hljs-subst {
     color: #fca5a5;
   }
 
@@ -458,6 +487,15 @@ const StyledWrapper = styled.div`
   && .hljs-quote {
     color: #94a3b8;
     font-style: italic;
+  }
+
+  && .hljs-deletion {
+    color: #f87171;
+  }
+
+  && .hljs-operator,
+  && .hljs-punctuation {
+    color: #cbd5e1;
   }
 
   img {
