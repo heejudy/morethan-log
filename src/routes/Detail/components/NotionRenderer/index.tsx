@@ -389,6 +389,7 @@ const StyledWrapper = styled.div`
 
   code {
     font-family: "Fira Code", monospace;
+    font-size: 0.86em;
     background: ${({ theme }) => theme.colors.gray3};
     padding: 0.1rem 0.3rem;
     border-radius: 4px;
@@ -411,6 +412,7 @@ const StyledWrapper = styled.div`
 
   pre code {
     background: transparent;
+    font-size: 0.85rem;
     padding: 0;
     color: inherit;
     white-space: inherit;
