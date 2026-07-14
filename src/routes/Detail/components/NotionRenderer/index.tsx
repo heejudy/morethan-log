@@ -399,10 +399,8 @@ const StyledWrapper = styled.div`
   pre {
     max-width: 100%;
     box-sizing: border-box;
-    background: ${({ theme }) =>
-      theme.scheme === "light" ? "#f6f6f4" : "#111827"};
-    color: ${({ theme }) =>
-      theme.scheme === "light" ? theme.colors.gray11 : "#e2e8f0"};
+    background: #111827;
+    color: #e2e8f0;
     padding: 1rem;
     border-radius: 6px;
     overflow-x: auto;
@@ -414,8 +412,51 @@ const StyledWrapper = styled.div`
     background: transparent;
     font-size: 0.85rem;
     padding: 0;
-    color: inherit;
     white-space: inherit;
+  }
+
+  && pre code.hljs {
+    background: transparent;
+    color: #e2e8f0;
+  }
+
+  && .hljs-keyword,
+  && .hljs-selector-tag,
+  && .hljs-built_in {
+    color: #c084fc;
+  }
+
+  && .hljs-string,
+  && .hljs-regexp,
+  && .hljs-template-variable {
+    color: #86efac;
+  }
+
+  && .hljs-number,
+  && .hljs-literal,
+  && .hljs-symbol,
+  && .hljs-bullet {
+    color: #facc15;
+  }
+
+  && .hljs-title,
+  && .hljs-section,
+  && .hljs-function .hljs-title {
+    color: #93c5fd;
+  }
+
+  && .hljs-attr,
+  && .hljs-attribute,
+  && .hljs-property,
+  && .hljs-variable,
+  && .hljs-params {
+    color: #fca5a5;
+  }
+
+  && .hljs-comment,
+  && .hljs-quote {
+    color: #94a3b8;
+    font-style: italic;
   }
 
   img {
