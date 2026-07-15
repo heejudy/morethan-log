@@ -72,21 +72,10 @@ const TableOfContents = ({ items }: { items: TocItem[] }) => {
 }
 
 const StyledWrapper = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.5rem;
+  position: relative;
   padding: 2.5rem 0 4rem;
-  max-width: 68rem;
+  max-width: 58rem;
   margin: 0 auto;
-
-  @media (min-width: 1180px) {
-    &[data-has-toc="true"] {
-      grid-template-columns: minmax(0, 50rem) 13.5rem;
-      align-items: start;
-      gap: 2.75rem;
-      max-width: 66.25rem;
-    }
-  }
 
   @media (max-width: 640px) {
     padding: 1.25rem 0 3rem;
@@ -95,7 +84,7 @@ const StyledWrapper = styled.div`
   > article {
     margin: 0 auto;
     width: 100%;
-    max-width: 50rem;
+    max-width: 58rem;
     padding: 3.25rem 4.5rem 4rem;
     background-color: ${({ theme }) =>
       theme.scheme === "light" ? "#fff" : theme.colors.gray3};
@@ -107,11 +96,6 @@ const StyledWrapper = styled.div`
       theme.scheme === "light"
         ? "0 14px 32px rgba(15, 23, 42, 0.04)"
         : "0 14px 32px rgba(0, 0, 0, 0.18)"};
-
-    @media (min-width: 1180px) {
-      grid-column: 1;
-      grid-row: 1;
-    }
 
     @media (max-width: 768px) {
       padding: 2.25rem 1.5rem 3rem;
@@ -127,10 +111,10 @@ const StyledToc = styled.aside`
 
   @media (min-width: 1180px) {
     display: block;
-    position: sticky;
-    top: 5rem;
-    grid-column: 2;
-    grid-row: 1;
+    position: absolute;
+    top: 2.85rem;
+    left: calc(100% + 2.75rem);
+    width: 13.5rem;
   }
 
   .toc-title {
